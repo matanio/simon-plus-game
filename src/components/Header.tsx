@@ -7,7 +7,7 @@ export default function Header() {
                 <div className="grid place-items-center">
                     <BrainIcon />
                 </div>
-                <h1 className="text-2xl font-bold">Simon+</h1>
+                <h1 className="text-xl font-bold">Simon+</h1>
             </div>
         </header>
     );
