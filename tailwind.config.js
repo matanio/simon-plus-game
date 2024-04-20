@@ -16,6 +16,13 @@ export default {
                     },
                 },
             },
+            backgroundImage: {
+                shimmer:
+                    'linear-gradient(-45deg, transparent 40%, rgba(255, 255, 255, 0.6) 50%, transparent 60%)',
+            },
+            backgroundSize: {
+                200: '200%',
+            },
         },
     },
     plugins: [],
