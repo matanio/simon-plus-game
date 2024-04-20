@@ -14,13 +14,13 @@ interface StartScreenProps {
 
 const StartScreen = ({ onDailyClick, onClassicClick }: StartScreenProps) => {
     return (
-        <div className="relative flex h-full w-full flex-col items-center justify-center bg-slate-900">
+        <div className="relative flex size-full flex-col items-center justify-center bg-slate-900">
             <div className="aspect-square w-11/12 max-w-3xl sm:w-5/6">
                 <motion.div
                     variants={startScreenGridContainer}
                     initial="hidden"
                     animate="visible"
-                    className="grid h-full w-full grid-cols-2 grid-rows-2 gap-4 p-4 sm:gap-8 sm:p-8"
+                    className="grid size-full grid-cols-2 grid-rows-2 gap-4 p-4 sm:gap-8 sm:p-8"
                 >
                     <motion.div
                         className="w-full rounded-xl bg-green-500/55  shadow-lg"
@@ -44,7 +44,7 @@ const StartScreen = ({ onDailyClick, onClassicClick }: StartScreenProps) => {
                 variants={startScreenOverlayFade}
                 initial="hidden"
                 animate="visible"
-                className="absolute flex h-full w-full flex-col items-center justify-center gap-4 bg-slate-900/95 px-4 text-center text-white"
+                className="absolute flex size-full flex-col items-center justify-center gap-4 bg-slate-900/95 px-4 text-center text-white"
             >
                 <div className="text-5xl font-bold">Simon+</div>
                 <div className="text-2xl">
