@@ -60,7 +60,7 @@ const StartScreen = ({ onDailyClick, onClassicClick }: StartScreenProps) => {
                                 Daily
                             </button>
                         </div>
-                        <div className="pointer-events-none col-start-1 col-end-1 row-start-1 row-end-1 -mr-1.5 -mt-1.5 justify-self-end">
+                        <div className="pointer-events-none col-start-1 row-start-1 row-end-1 -mr-1.5 -mt-1.5 justify-self-end">
                             <NewTag />
                         </div>
                     </div>
