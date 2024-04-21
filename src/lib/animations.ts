@@ -30,3 +30,18 @@ export const startScreenOverlayFade: Variants = {
         transition: { delay: 1.3, duration: 0.3 },
     },
 };
+
+export const fadeInUpwards: Variants = {
+    hidden: { y: 400, opacity: 0, scale: 2 },
+    visible: {
+        y: 0,
+        scale: 1,
+        opacity: 1,
+        transition: {
+            duration: 0.2,
+            type: 'spring',
+            stiffness: 33,
+            ease: 'easeOut',
+        },
+    },
+};

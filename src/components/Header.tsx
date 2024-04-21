@@ -1,4 +1,6 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '../lib/util.ts';
+import { fadeInUpwards } from '../lib/animations.ts';
 
 export type mode = 'classic' | 'daily';
 
@@ -8,19 +10,28 @@ interface HeaderProps {
 
 export default function Header({ mode }: HeaderProps) {
     return (
-        <header className="grid place-content-center bg-slate-900 py-4">
-            <div className="flex flex-row items-center justify-center gap-1">
-                <h1
-                    className={cn(
-                        'text-3xl font-bold text-white',
-                        mode ? 'visible' : 'invisible'
-                    )}
-                >
-                    Simon+
-                </h1>
-                {mode && (mode === 'classic' ? <ClassicTag /> : <DailyTag />)}
-            </div>
-        </header>
+        <AnimatePresence>
+            <header
+                className={cn(
+                    'z-20 grid place-content-center bg-slate-900 py-4',
+                    !mode && 'py-[2.125rem]'
+                )}
+            >
+                {mode && (
+                    <motion.div
+                        variants={fadeInUpwards}
+                        initial="hidden"
+                        animate="visible"
+                        className="flex flex-row items-center justify-center gap-1"
+                    >
+                        <h1 className="text-3xl font-bold text-white">
+                            Simon+
+                        </h1>
+                        {mode === 'classic' ? <ClassicTag /> : <DailyTag />}
+                    </motion.div>
+                )}
+            </header>
+        </AnimatePresence>
     );
 }
 

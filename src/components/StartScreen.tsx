@@ -14,7 +14,12 @@ interface StartScreenProps {
 
 const StartScreen = ({ onDailyClick, onClassicClick }: StartScreenProps) => {
     return (
-        <div className="relative flex size-full flex-col items-center justify-center bg-slate-900">
+        <motion.div
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="relative flex size-full flex-col items-center justify-center"
+        >
             <div className="aspect-square w-11/12 max-w-3xl sm:w-5/6">
                 <motion.div
                     variants={startScreenGridContainer}
@@ -73,7 +78,7 @@ const StartScreen = ({ onDailyClick, onClassicClick }: StartScreenProps) => {
                     <div></div>
                 </div>
             </motion.div>
-        </div>
+        </motion.div>
     );
 };
 
