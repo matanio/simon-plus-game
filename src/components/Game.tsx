@@ -1,5 +1,6 @@
 import { cn } from '../lib/util.ts';
 import { useState } from 'react';
+import * as Tone from 'tone';
 
 interface GameProps {
     isSoundOn: boolean;
@@ -7,13 +8,14 @@ interface GameProps {
     isPlaying: true;
 }
 
+const synth = new Tone.Synth().toDestination();
+
 export default function Game({
     isSoundOn,
     numberOfTiles,
     isPlaying,
 }: GameProps) {
     const [score, setScore] = useState(0);
-
     const [generatedSequence, setGeneratedSequence] = useState<number[]>([]);
 
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
@@ -27,7 +29,7 @@ export default function Game({
     const startGame = async () => {
         console.log('game started');
         setScore(0);
-        await playSequence();
+        playSequence();
     };
 
     const colors = [
@@ -61,29 +63,34 @@ export default function Game({
         setGeneratedSequence(newSequence);
         for (let i = 0; i < newSequence.length; i++) {
             await sleep(500);
+            playNote(newSequence[i]);
             flashTile(newSequence[i]);
             await sleep(500);
             resetTile(newSequence[i]);
         }
+        await sleep(500);
         setIsButtonsDisabled(false);
         setSequenceClickCount(0);
     };
 
-    const onTileClick = (tile: number) => {
+    const onTileClick = async (tile: number) => {
         if (isButtonsDisabled) return;
         const isCorrectTile = tile === generatedSequence[sequenceClickCount];
         if (isCorrectTile) {
+            playNote(tile);
             const isLastTile =
                 sequenceClickCount === generatedSequence.length - 1;
             if (isLastTile) {
                 // do it again
                 console.log('nice, one more...'); // TODO: make message
+                await sleep(500);
                 setScore(prev => prev + 1);
                 playSequence();
             } else {
                 setSequenceClickCount(prev => prev + 1);
             }
         } else {
+            playGameOverSound();
             console.log('Game Over');
             setScore(0);
             setGeneratedSequence([]);
@@ -106,6 +113,17 @@ export default function Game({
         setTileColors(newTileColors);
     };
 
+    const playNote = (tile: number) => {
+        const notes = ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'];
+        if (isSoundOn) {
+            synth.triggerAttackRelease(notes[tile - 1], '5n');
+        }
+    };
+
+    const playGameOverSound = () => {
+        // TODO
+    };
+
     return (
         <>
             <button onClick={startGame}>Start</button>
@@ -119,9 +137,9 @@ export default function Game({
                                 disabled={isButtonsDisabled}
                                 key={tile}
                                 className={cn(
-                                    'w-full rounded-xl',
-                                    `${tileColors[index]}`,
-                                    'shadow-lg'
+                                    'w-full rounded-xl shadow-lg hover:brightness-125 disabled:hover:filter-none',
+                                    isButtonsDisabled && 'cursor-not-allowed',
+                                    `${tileColors[index]}`
                                 )}
                             ></button>
                         ))}
