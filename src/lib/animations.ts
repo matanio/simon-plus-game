@@ -1,6 +1,6 @@
 import { Variants } from 'framer-motion';
 
-export const startScreenGridContainer = {
+export const startScreenGridContainer: Variants = {
     hidden: { opacity: 1 },
     visible: {
         opacity: 1,
