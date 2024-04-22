@@ -30,8 +30,8 @@ const App = () => {
                             onDailyClick={handlePress}
                         />
                     )}
+                    {mode === 'classic' && <ClassicMode />}
                 </AnimatePresence>
-                {mode === 'classic' && <ClassicMode />}
                 {/*TODO*/}
                 {/*<ClassicMode />*/}
             </main>
