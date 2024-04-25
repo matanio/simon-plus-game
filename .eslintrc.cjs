@@ -16,6 +16,5 @@ module.exports = {
             'warn',
             { allowConstantExport: true },
         ],
-        'tailwindcss/classnames-order': 'off',
     },
 };
