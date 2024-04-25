@@ -1,21 +1,32 @@
 import { motion } from 'framer-motion';
 import Game from './Game.tsx';
+import { useState } from 'react';
+import InstructionsModal from './InstructionsModal.tsx';
 
 export default function ClassicMode() {
+    const [isStarted, setIsStarted] = useState<boolean>(false);
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="flex size-full flex-col items-center justify-center"
+            className="relative grid size-full items-start p-4"
         >
-            <div className="flex flex-row items-center justify-between gap-12 text-white">
-                <div>Volume</div>
-                <div>Score</div>
-                <div>Settings</div>
+            <div className="col-start-1 row-start-1 row-end-1">
+                <Game
+                    isPlaying={isStarted}
+                    isSoundOn={true}
+                    numberOfTiles={4}
+                />
             </div>
-            {/* TODO: change to only set isPlaying later */}
-            <Game isPlaying={true} isSoundOn={true} numberOfTiles={4} />
+            {!isStarted && (
+                <div className="col-start-1 row-start-1 row-end-1 flex size-full items-start justify-center bg-slate-900/90 sm:items-center">
+                    <InstructionsModal
+                        onStartClick={() => setIsStarted(true)}
+                    />
+                </div>
+            )}
         </motion.div>
     );
 }

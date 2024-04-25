@@ -1,11 +1,11 @@
 import { cn } from '../lib/util.ts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 
 interface GameProps {
     isSoundOn: boolean;
     numberOfTiles: 4 | 6 | 8;
-    isPlaying: true;
+    isPlaying: boolean;
 }
 
 const synth = new Tone.Synth().toDestination();
@@ -26,8 +26,14 @@ export default function Game({
         return Array.from({ length: numberOfTiles }, (_, index) => index + 1);
     };
 
+    useEffect(() => {
+        if (isPlaying) {
+            Tone.start();
+            startGame();
+        }
+    }, [isPlaying]);
+
     const startGame = async () => {
-        console.log('game started');
         setScore(0);
         playSequence();
     };
@@ -68,7 +74,6 @@ export default function Game({
             await sleep(500);
             resetTile(newSequence[i]);
         }
-        await sleep(500);
         setIsButtonsDisabled(false);
         setSequenceClickCount(0);
     };
@@ -125,27 +130,28 @@ export default function Game({
     };
 
     return (
-        <>
-            <button onClick={startGame}>Start</button>
-
-            <div className="flex size-full flex-col items-center justify-center">
-                <div className="aspect-square w-11/12 max-w-3xl sm:w-5/6">
-                    <div className="grid size-full grid-cols-2 grid-rows-2 gap-4 p-4 sm:gap-8 sm:p-8">
-                        {buildTiles(numberOfTiles).map((tile, index) => (
-                            <button
-                                onClick={() => onTileClick(tile)}
-                                disabled={isButtonsDisabled}
-                                key={tile}
-                                className={cn(
-                                    'w-full rounded-xl shadow-lg hover:brightness-125 disabled:hover:filter-none',
-                                    isButtonsDisabled && 'cursor-not-allowed',
-                                    `${tileColors[index]}`
-                                )}
-                            ></button>
-                        ))}
-                    </div>
+        <div className="flex size-full flex-col items-center justify-center">
+            <div className="flex flex-row items-center justify-between gap-12 text-white">
+                <div>Volume</div>
+                <div>Score</div>
+                <div>Settings</div>
+            </div>
+            <div className="aspect-square w-11/12 max-w-3xl sm:w-5/6">
+                <div className="grid size-full grid-cols-2 grid-rows-2 gap-4 p-4 sm:gap-8 sm:p-8">
+                    {buildTiles(numberOfTiles).map((tile, index) => (
+                        <button
+                            onClick={() => onTileClick(tile)}
+                            disabled={isButtonsDisabled}
+                            key={tile}
+                            className={cn(
+                                'w-full rounded-xl shadow-lg hover:brightness-125 disabled:hover:filter-none',
+                                isButtonsDisabled && 'cursor-not-allowed',
+                                `${tileColors[index]}`
+                            )}
+                        ></button>
+                    ))}
                 </div>
             </div>
-        </>
+        </div>
     );
 }

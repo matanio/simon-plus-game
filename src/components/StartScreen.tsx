@@ -51,7 +51,7 @@ const StartScreen = ({ onDailyClick, onClassicClick }: StartScreenProps) => {
                 animate="visible"
                 className="absolute flex size-full flex-col items-center justify-center gap-4 bg-slate-900/95 px-4 text-center text-white"
             >
-                <div className="text-5xl font-bold">Simon+</div>
+                <div className="text-5xl font-semibold">Simon+</div>
                 <div className="text-2xl">
                     The original memory game — with a few extras.
                 </div>

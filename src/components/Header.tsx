@@ -35,7 +35,7 @@ export default function Header({ mode }: HeaderProps) {
     );
 }
 
-const ClassicTag = () => {
+export const ClassicTag = () => {
     return (
         <div className="rounded-full border-[1.5px] border-indigo-300 bg-indigo-500 px-3 py-1.5 text-xs font-medium text-white">
             Classic

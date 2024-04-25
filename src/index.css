@@ -5,7 +5,7 @@
 @layer base {
     @font-face {
         font-family: "Jersey 25";
-        src: url("/fonts/Jersey25-Regular.ttf");
+        src: url("/fonts/Jersey25-Regular.ttf") format('truetype');
     }
 }
 

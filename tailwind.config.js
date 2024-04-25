@@ -1,15 +1,36 @@
+import defaultTheme from 'tailwindcss/defaultTheme';
+
 /** @type {import('tailwindcss').Config} */
 export default {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
         extend: {
             fontFamily: {
-                jersey: ["'Jersey 25'", 'sans-serif'],
+                sans: ['"Jersey 25"', ...defaultTheme.fontFamily.sans],
+                inter: ["'Inter'", 'sans-serif'],
             },
             animation: {
-                shimmer: 'shimmer 1.5s infinite linear',
+                shimmer: 'shimmer 1.5s infinite ease-out',
+                blink: 'blink 1.8s infinite',
             },
             keyframes: {
+                blink: {
+                    '0%': {
+                        opacity: 1,
+                    },
+                    '5%': {
+                        opacity: 0,
+                    },
+                    '50%': {
+                        opacity: 0,
+                    },
+                    '51%': {
+                        opacity: 1,
+                    },
+                    '100%': {
+                        opacity: 1,
+                    },
+                },
                 shimmer: {
                     '0%': {
                         backgroundPositionX: '200%',
