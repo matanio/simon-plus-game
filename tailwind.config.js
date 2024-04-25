@@ -3,6 +3,9 @@ export default {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
         extend: {
+            fontFamily: {
+                jersey: ["'Jersey 25'", 'sans-serif'],
+            },
             animation: {
                 shimmer: 'shimmer 1.5s infinite linear',
             },
