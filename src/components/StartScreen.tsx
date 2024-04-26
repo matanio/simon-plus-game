@@ -28,19 +28,19 @@ const StartScreen = ({ onDailyClick, onClassicClick }: StartScreenProps) => {
                     className="grid size-full grid-cols-2 grid-rows-2 gap-4 p-4 sm:gap-8 sm:p-8"
                 >
                     <motion.div
-                        className="w-full rounded-xl bg-green-500/55  shadow-lg"
+                        className="w-full rounded-xl bg-green-500/55 shadow-push-button"
                         variants={startScreenSquare}
                     ></motion.div>
                     <motion.div
-                        className="w-full rounded-xl bg-red-600/55 shadow-lg"
+                        className="w-full rounded-xl bg-red-600/55 shadow-push-button"
                         variants={startScreenSquare}
                     ></motion.div>
                     <motion.div
-                        className="w-full rounded-xl bg-yellow-400/55 shadow-lg"
+                        className="w-full rounded-xl bg-yellow-400/55 shadow-push-button"
                         variants={startScreenSquare}
                     ></motion.div>
                     <motion.div
-                        className="w-full rounded-xl bg-blue-700/55 shadow-lg"
+                        className="w-full rounded-xl bg-blue-700/55 shadow-push-button"
                         variants={startScreenSquare}
                     ></motion.div>
                 </motion.div>
@@ -75,7 +75,6 @@ const StartScreen = ({ onDailyClick, onClassicClick }: StartScreenProps) => {
                     >
                         Classic
                     </button>
-                    <div></div>
                 </div>
             </motion.div>
         </motion.div>

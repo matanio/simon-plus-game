@@ -5,8 +5,7 @@ import * as Tone from 'tone';
 interface GameProps {
     numberOfTiles: 4 | 6 | 8;
     isPlaying: boolean;
-    onGameOver: () => void;
-    setIsStarted: (isStarted: boolean) => void;
+    setIsPlaying: (isPlaying: boolean) => void;
 }
 
 const synth = new Tone.Synth().toDestination();
@@ -14,8 +13,7 @@ const synth = new Tone.Synth().toDestination();
 export default function Game({
     numberOfTiles,
     isPlaying,
-    onGameOver,
-    setIsStarted,
+    setIsPlaying,
 }: GameProps) {
     const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
     const [score, setScore] = useState(0);
@@ -30,13 +28,13 @@ export default function Game({
         return Array.from({ length: numberOfTiles }, (_, index) => index + 1);
     };
 
+    const startGame = () => {
+        Tone.start();
+        setScore(0);
+        playSequence();
+    };
+
     useEffect(() => {
-        const startGame = () => {
-            Tone.start();
-            setScore(0);
-            playSequence();
-        };
-        console.log(isPlaying);
         if (isPlaying) {
             startGame();
         }
@@ -147,8 +145,7 @@ export default function Game({
         console.log('Game Over');
         setGeneratedSequence([]);
         setIsButtonsDisabled(true);
-        onGameOver();
-        setIsStarted(false);
+        setIsPlaying(false);
     };
 
     return (
@@ -180,8 +177,9 @@ export default function Game({
                             disabled={isButtonsDisabled}
                             key={tile}
                             className={cn(
-                                'w-full rounded-xl shadow-lg hover:brightness-125 disabled:hover:filter-none',
-                                isButtonsDisabled && 'cursor-not-allowed',
+                                'w-full rounded-xl hover:brightness-125 disabled:hover:filter-none shadow-push-button focus:outline-none active:translate-y-1 active:pb-2 active:shadow-push-button-active',
+                                isButtonsDisabled &&
+                                    'cursor-not-allowed pointer-events-none',
                                 `${tileColors[index]}`
                             )}
                         ></button>
