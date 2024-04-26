@@ -8,7 +8,7 @@ export default function InstructionsModal({
     onStartClick,
 }: InstructionsModalProps) {
     return (
-        <div className="flex aspect-square w-full max-w-md flex-col items-center justify-center gap-4 rounded-xl border-2 border-slate-600 bg-slate-800/[0.99] p-4 text-white shadow">
+        <div className="flex w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-slate-600 bg-slate-800/[0.99] p-4 text-white shadow">
             <h1 className="text-3xl font-extrabold">How To Play</h1>
             <h2 className="text-xl font-extralight">
                 Test your memory by clicking the{' '}

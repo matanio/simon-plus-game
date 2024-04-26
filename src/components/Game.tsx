@@ -3,19 +3,23 @@ import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 
 interface GameProps {
-    isSoundOn: boolean;
     numberOfTiles: 4 | 6 | 8;
     isPlaying: boolean;
+    onGameOver: () => void;
+    setIsStarted: (isStarted: boolean) => void;
 }
 
 const synth = new Tone.Synth().toDestination();
 
 export default function Game({
-    isSoundOn,
     numberOfTiles,
     isPlaying,
+    onGameOver,
+    setIsStarted,
 }: GameProps) {
+    const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
     const [score, setScore] = useState(0);
+    const [highScore, setHighScore] = useState<number>(0);
     const [generatedSequence, setGeneratedSequence] = useState<number[]>([]);
 
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
@@ -27,16 +31,16 @@ export default function Game({
     };
 
     useEffect(() => {
-        if (isPlaying) {
+        const startGame = () => {
             Tone.start();
+            setScore(0);
+            playSequence();
+        };
+        console.log(isPlaying);
+        if (isPlaying) {
             startGame();
         }
     }, [isPlaying]);
-
-    const startGame = async () => {
-        setScore(0);
-        playSequence();
-    };
 
     const colors = [
         'bg-green-500/75',
@@ -78,6 +82,14 @@ export default function Game({
         setSequenceClickCount(0);
     };
 
+    const incrementScore = () => {
+        const newScore = score + 1;
+        if (newScore > highScore) {
+            setHighScore(newScore);
+        }
+        setScore(newScore);
+    };
+
     const onTileClick = async (tile: number) => {
         if (isButtonsDisabled) return;
         const isCorrectTile = tile === generatedSequence[sequenceClickCount];
@@ -89,19 +101,16 @@ export default function Game({
                 // do it again
                 console.log('nice, one more...'); // TODO: make message
                 await sleep(500);
-                setScore(prev => prev + 1);
+                incrementScore();
                 playSequence();
             } else {
                 setSequenceClickCount(prev => prev + 1);
             }
         } else {
-            playGameOverSound();
-            console.log('Game Over');
-            setScore(0);
-            setGeneratedSequence([]);
-            setIsButtonsDisabled(true);
+            gameOver();
         }
     };
+
     const sleep = (ms: number) => {
         return new Promise(resolve => setTimeout(resolve, ms));
     };
@@ -129,15 +138,42 @@ export default function Game({
         // TODO
     };
 
+    const toggleSound = () => {
+        setIsSoundOn(prev => !prev);
+    };
+
+    const gameOver = () => {
+        playGameOverSound();
+        console.log('Game Over');
+        setGeneratedSequence([]);
+        setIsButtonsDisabled(true);
+        onGameOver();
+        setIsStarted(false);
+    };
+
     return (
-        <div className="flex size-full flex-col items-center justify-center">
-            <div className="flex flex-row items-center justify-between gap-12 text-white">
-                <div>Volume</div>
-                <div>Score</div>
-                <div>Settings</div>
-            </div>
+        <div className="flex size-full flex-col items-center gap-4 p-4">
             <div className="aspect-square w-11/12 max-w-3xl sm:w-5/6">
-                <div className="grid size-full grid-cols-2 grid-rows-2 gap-4 p-4 sm:gap-8 sm:p-8">
+                <div className="grid grid-cols-3 text-xl text-white">
+                    <button
+                        className="justify-self-start"
+                        onClick={toggleSound}
+                    >
+                        {isSoundOn ? '🔊' : '🔇'}
+                    </button>
+                    <div className="justify-self-center">Score: {score}</div>
+                    <div className="justify-self-end">
+                        Highscore: {highScore}
+                    </div>
+                </div>
+                <div
+                    className={cn(
+                        'mt-4 grid size-full gap-4 sm:gap-8 grid-cols-2',
+                        numberOfTiles === 4 && 'grid-rows-2',
+                        numberOfTiles === 6 && 'grid-rows-3',
+                        numberOfTiles === 8 && 'grid-rows-4'
+                    )}
+                >
                     {buildTiles(numberOfTiles).map((tile, index) => (
                         <button
                             onClick={() => onTileClick(tile)}
