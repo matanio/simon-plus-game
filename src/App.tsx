@@ -8,31 +8,28 @@ import { AnimatePresence } from 'framer-motion';
 const App = () => {
     const [mode, setMode] = useState<mode | null>(null);
 
-    const handlePress = () => {
+    const handleDailyClick = () => {
         setMode('daily');
-        console.log('Pressed');
     };
 
     const handleClassicClick = () => {
         setMode('classic');
-        console.log('Classic Clicked');
     };
 
     return (
         <div className="flex h-screen flex-col">
             <Header mode={mode} />
-            {/* Main Space */}
             <main className="grow bg-slate-900">
                 <AnimatePresence>
                     {!mode && (
                         <StartScreen
                             onClassicClick={handleClassicClick}
-                            onDailyClick={handlePress}
+                            onDailyClick={handleDailyClick}
                         />
                     )}
                     {mode === 'classic' && <ClassicMode />}
                 </AnimatePresence>
-                {/*TODO*/}
+                {/* TODO */}
                 {/*<ClassicMode />*/}
             </main>
 

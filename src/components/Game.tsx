@@ -105,7 +105,7 @@ export default function Game({
                 setCorrectAttempt(true);
                 await sleep(600);
                 incrementScore();
-                setCorrectAttempt(false);
+                // setCorrectAttempt(false);
                 playSequence();
             } else {
                 setSequenceClickCount(prev => prev + 1);
@@ -158,19 +158,8 @@ export default function Game({
     };
 
     return (
-        <div className="relative flex size-full flex-col items-center gap-4 p-4">
-            <AnimatePresence>
-                {correctAttempt && (
-                    <motion.div
-                        animate={{ opacity: 1 }}
-                        initial={{ opacity: 0 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute inset-0 z-10 flex size-full animate-radial-outwards items-center justify-center bg-slate-900/90 bg-blue-radial-gradient text-2xl text-white"
-                    ></motion.div>
-                )}
-            </AnimatePresence>
-            s
-            <div className="z-20 aspect-square w-11/12 max-w-3xl sm:w-5/6">
+        <div className="flex size-full flex-col items-center gap-4 p-4">
+            <div className="relative aspect-square w-11/12 max-w-3xl sm:w-5/6">
                 <div className="grid grid-cols-3 text-xl text-white">
                     <button
                         className="justify-self-start"
@@ -185,7 +174,7 @@ export default function Game({
                 </div>
                 <div
                     className={cn(
-                        'mt-4 grid size-full gap-4 sm:gap-8 grid-cols-2',
+                        'relative mt-4 grid size-full gap-4 sm:gap-8 grid-cols-2',
                         numberOfTiles === 4 && 'grid-rows-2',
                         numberOfTiles === 6 && 'grid-rows-3',
                         numberOfTiles === 8 && 'grid-rows-4'
@@ -198,7 +187,7 @@ export default function Game({
                             key={tile}
                             className={cn(
                                 ` active:${flashColors[index]}`,
-                                'w-full rounded-xl hover:brightness-125 disabled:hover:filter-none shadow-push-button focus:outline-none active:translate-y-1 active:pb-2 active:shadow-push-button-active',
+                                'w-full rounded-xl z-50 hover:brightness-125 disabled:hover:filter-none shadow-push-button focus:outline-none active:translate-y-1 active:pb-2 active:shadow-push-button-active',
                                 isButtonsDisabled &&
                                     'cursor-not-allowed pointer-events-none',
                                 `${tileColors[index]}`,
@@ -208,6 +197,16 @@ export default function Game({
                             )}
                         ></button>
                     ))}
+                    <AnimatePresence>
+                        {correctAttempt && (
+                            <motion.div
+                                animate={{ opacity: 1 }}
+                                initial={{ opacity: 0 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 z-10 size-full animate-radial-outwards bg-blue-radial-gradient bg-top text-2xl text-white"
+                            ></motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
         </div>
