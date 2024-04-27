@@ -18,6 +18,7 @@ export default {
             animation: {
                 shimmer: 'shimmer 1.5s infinite ease-out',
                 blink: 'blink 1.8s infinite',
+                'radial-outwards': 'radial-outwards 2s infinite linear',
             },
             keyframes: {
                 blink: {
@@ -49,6 +50,10 @@ export default {
             backgroundImage: {
                 shimmer:
                     'linear-gradient(-45deg, transparent 40%, rgba(255, 255, 255, 0.6) 50%, transparent 60%)',
+                'green-radial-gradient':
+                    'radial-gradient(circle, rgb(34 197 94 / 0.25) 0%, rgb(34 197 94 / 0.25) 30%, transparent 50%)',
+                'blue-radial-gradient':
+                    'radial-gradient(circle,  rgb(147 197 253 / 0.25) 0%, rgb(147 197 253 / 0.25) 30%, transparent 50%)',
             },
             backgroundSize: {
                 200: '200%',

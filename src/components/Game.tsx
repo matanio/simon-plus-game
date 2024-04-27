@@ -1,6 +1,7 @@
 import { cn } from '../lib/util.ts';
 import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface GameProps {
     numberOfTiles: 4 | 6 | 8;
@@ -23,6 +24,10 @@ export default function Game({
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
 
     const [sequenceClickCount, setSequenceClickCount] = useState(0);
+
+    const [activeTile, setActiveTile] = useState<number | null>(null);
+
+    const [correctAttempt, setCorrectAttempt] = useState(false);
 
     const buildTiles = (numberOfTiles: number) => {
         return Array.from({ length: numberOfTiles }, (_, index) => index + 1);
@@ -90,22 +95,26 @@ export default function Game({
 
     const onTileClick = async (tile: number) => {
         if (isButtonsDisabled) return;
+        playNote(tile);
         const isCorrectTile = tile === generatedSequence[sequenceClickCount];
         if (isCorrectTile) {
-            playNote(tile);
             const isLastTile =
                 sequenceClickCount === generatedSequence.length - 1;
             if (isLastTile) {
                 // do it again
-                console.log('nice, one more...'); // TODO: make message
-                await sleep(500);
+                setCorrectAttempt(true);
+                await sleep(600);
                 incrementScore();
+                setCorrectAttempt(false);
                 playSequence();
             } else {
                 setSequenceClickCount(prev => prev + 1);
             }
         } else {
-            gameOver();
+            setGeneratedSequence([]);
+            setIsButtonsDisabled(true);
+            await flashCorrectTile();
+            setIsPlaying(false);
         }
     };
 
@@ -117,12 +126,14 @@ export default function Game({
         const newTileColors = [...tileColors];
         newTileColors[tile - 1] = flashColors[tile - 1];
         setTileColors(newTileColors);
+        setActiveTile(tile); // Set the active tile
     };
 
     const resetTile = (tile: number) => {
         const newTileColors = [...tileColors];
         newTileColors[tile - 1] = colors[tile - 1];
         setTileColors(newTileColors);
+        setActiveTile(null); // Reset the active tile
     };
 
     const playNote = (tile: number) => {
@@ -132,25 +143,34 @@ export default function Game({
         }
     };
 
-    const playGameOverSound = () => {
-        // TODO
-    };
-
     const toggleSound = () => {
         setIsSoundOn(prev => !prev);
     };
 
-    const gameOver = () => {
-        playGameOverSound();
-        console.log('Game Over');
-        setGeneratedSequence([]);
-        setIsButtonsDisabled(true);
-        setIsPlaying(false);
+    const flashCorrectTile = async () => {
+        const NUMBER_OF_FLASHES = 3;
+        for (let i = 0; i < NUMBER_OF_FLASHES; i++) {
+            flashTile(generatedSequence[sequenceClickCount]);
+            await sleep(250);
+            resetTile(generatedSequence[sequenceClickCount]);
+            await sleep(250);
+        }
     };
 
     return (
-        <div className="flex size-full flex-col items-center gap-4 p-4">
-            <div className="aspect-square w-11/12 max-w-3xl sm:w-5/6">
+        <div className="relative flex size-full flex-col items-center gap-4 p-4">
+            <AnimatePresence>
+                {correctAttempt && (
+                    <motion.div
+                        animate={{ opacity: 1 }}
+                        initial={{ opacity: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 z-10 flex size-full animate-radial-outwards items-center justify-center bg-slate-900/90 bg-blue-radial-gradient text-2xl text-white"
+                    ></motion.div>
+                )}
+            </AnimatePresence>
+            s
+            <div className="z-20 aspect-square w-11/12 max-w-3xl sm:w-5/6">
                 <div className="grid grid-cols-3 text-xl text-white">
                     <button
                         className="justify-self-start"
@@ -177,10 +197,14 @@ export default function Game({
                             disabled={isButtonsDisabled}
                             key={tile}
                             className={cn(
+                                ` active:${flashColors[index]}`,
                                 'w-full rounded-xl hover:brightness-125 disabled:hover:filter-none shadow-push-button focus:outline-none active:translate-y-1 active:pb-2 active:shadow-push-button-active',
                                 isButtonsDisabled &&
                                     'cursor-not-allowed pointer-events-none',
-                                `${tileColors[index]}`
+                                `${tileColors[index]}`,
+                                tile === activeTile &&
+                                    flashColors[index] +
+                                        ' shadow-push-button-active translate-y-1 pb-2'
                             )}
                         ></button>
                     ))}
