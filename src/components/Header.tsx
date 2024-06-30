@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '../lib/util.ts';
 import { fadeInUpwards } from '../lib/animations.ts';
+import Container from './Container.tsx';
 
 export type mode = 'classic' | 'daily';
 
@@ -13,22 +14,33 @@ export default function Header({ mode }: HeaderProps) {
         <AnimatePresence>
             <header
                 className={cn(
-                    'z-20 grid place-content-center bg-slate-900 py-4',
+                    'z-20 bg-slate-900 py-4',
                     !mode && 'py-[2.125rem]'
                 )}
             >
                 {mode && (
-                    <motion.div
-                        variants={fadeInUpwards}
-                        initial="hidden"
-                        animate="visible"
-                        className="flex flex-row items-center justify-center gap-1"
-                    >
-                        <h1 className="text-3xl font-bold text-white">
-                            Simon+
-                        </h1>
-                        {mode === 'classic' ? <ClassicTag /> : <DailyTag />}
-                    </motion.div>
+                    <Container>
+                        <motion.div
+                            variants={fadeInUpwards}
+                            initial="hidden"
+                            animate="visible"
+                            className="grid w-full grid-cols-3 items-center"
+                        >
+                            <div className="col-start-2 flex flex-row items-center justify-center gap-1">
+                                <h1 className="text-3xl font-bold text-white">
+                                    Simon+
+                                </h1>
+                                {mode === 'classic' ? (
+                                    <ClassicTag />
+                                ) : (
+                                    <DailyTag />
+                                )}
+                            </div>
+                            <button className="col-start-3 flex flex-row gap-2 justify-self-end p-2 text-lg">
+                                <span>⚙️</span>
+                            </button>
+                        </motion.div>
+                    </Container>
                 )}
             </header>
         </AnimatePresence>

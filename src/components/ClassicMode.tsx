@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Game from './Game.tsx';
 import { useState } from 'react';
 import InstructionsModal from './InstructionsModal.tsx';
+import Container from './Container.tsx';
 
 export default function ClassicMode() {
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -15,13 +16,15 @@ export default function ClassicMode() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="relative grid size-full items-center px-4 pb-12 pt-4"
+            className="relative grid size-full px-4 pb-12 pt-4"
         >
-            <Game
-                isPlaying={isPlaying}
-                numberOfTiles={4}
-                setIsPlaying={setIsPlaying}
-            />
+            <Container>
+                <Game
+                    isPlaying={isPlaying}
+                    numberOfTiles={4}
+                    setIsPlaying={setIsPlaying}
+                />
+            </Container>
             <AnimatePresence>
                 {!isPlaying && (
                     <motion.div

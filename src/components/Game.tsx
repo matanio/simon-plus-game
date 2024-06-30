@@ -1,4 +1,4 @@
-import { cn } from '../lib/util.ts';
+import { cn, useLocalStorage } from '../lib/util.ts';
 import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -18,7 +18,10 @@ export default function Game({
 }: GameProps) {
     const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
     const [score, setScore] = useState(0);
-    const [highScore, setHighScore] = useState<number>(0);
+    const [highScore, setHighScore] = useLocalStorage<number>(
+        'classic_high_score',
+        0
+    );
     const [generatedSequence, setGeneratedSequence] = useState<number[]>([]);
 
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
@@ -105,7 +108,7 @@ export default function Game({
                 setCorrectAttempt(true);
                 await sleep(600);
                 incrementScore();
-                // setCorrectAttempt(false);
+                setCorrectAttempt(false);
                 playSequence();
             } else {
                 setSequenceClickCount(prev => prev + 1);
@@ -158,57 +161,52 @@ export default function Game({
     };
 
     return (
-        <div className="flex size-full flex-col items-center gap-4 p-4">
-            <div className="relative aspect-square w-11/12 max-w-3xl sm:w-5/6">
-                <div className="grid grid-cols-3 text-xl text-white">
-                    <button
-                        className="justify-self-start"
-                        onClick={toggleSound}
-                    >
-                        {isSoundOn ? '🔊' : '🔇'}
-                    </button>
-                    <div className="justify-self-center">Score: {score}</div>
-                    <div className="justify-self-end">
-                        Highscore: {highScore}
-                    </div>
-                </div>
-                <div
-                    className={cn(
-                        'relative mt-4 grid size-full gap-4 sm:gap-8 grid-cols-2',
-                        numberOfTiles === 4 && 'grid-rows-2',
-                        numberOfTiles === 6 && 'grid-rows-3',
-                        numberOfTiles === 8 && 'grid-rows-4'
-                    )}
-                >
-                    {buildTiles(numberOfTiles).map((tile, index) => (
-                        <button
-                            onClick={() => onTileClick(tile)}
-                            disabled={isButtonsDisabled}
-                            key={tile}
-                            className={cn(
-                                ` active:${flashColors[index]}`,
-                                'w-full rounded-xl z-50 hover:brightness-125 disabled:hover:filter-none shadow-push-button focus:outline-none active:translate-y-1 active:pb-2 active:shadow-push-button-active',
-                                isButtonsDisabled &&
-                                    'cursor-not-allowed pointer-events-none',
-                                `${tileColors[index]}`,
-                                tile === activeTile &&
-                                    flashColors[index] +
-                                        ' shadow-push-button-active translate-y-1 pb-2'
-                            )}
-                        ></button>
-                    ))}
-                    <AnimatePresence>
-                        {correctAttempt && (
-                            <motion.div
-                                animate={{ opacity: 1 }}
-                                initial={{ opacity: 0 }}
-                                exit={{ opacity: 0 }}
-                                className="absolute inset-0 z-10 size-full animate-radial-outwards bg-blue-radial-gradient bg-top text-2xl text-white"
-                            ></motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
+        <div className="relative flex aspect-square w-full flex-col items-center gap-4">
+            {/*<div className="">*/}
+            <div className="grid w-full grid-cols-3 text-xl text-white">
+                <button className="justify-self-start" onClick={toggleSound}>
+                    {isSoundOn ? '🔊' : '🔇'}
+                </button>
+                <div className="justify-self-center">Score: {score}</div>
+                <div className="justify-self-end">Highscore: {highScore}</div>
             </div>
+            <div
+                className={cn(
+                    'relative mt-4 grid size-full gap-4 sm:gap-8 grid-cols-2',
+                    numberOfTiles === 4 && 'grid-rows-2',
+                    numberOfTiles === 6 && 'grid-rows-3',
+                    numberOfTiles === 8 && 'grid-rows-4'
+                )}
+            >
+                {buildTiles(numberOfTiles).map((tile, index) => (
+                    <button
+                        onClick={() => onTileClick(tile)}
+                        disabled={isButtonsDisabled}
+                        key={tile}
+                        className={cn(
+                            ` active:${flashColors[index]}`,
+                            'w-full rounded-xl z-50 hover:brightness-125 disabled:hover:filter-none shadow-push-button focus:outline-none active:translate-y-1 active:pb-2 active:shadow-push-button-active',
+                            isButtonsDisabled &&
+                                'cursor-not-allowed pointer-events-none',
+                            `${tileColors[index]}`,
+                            tile === activeTile &&
+                                flashColors[index] +
+                                    ' shadow-push-button-active translate-y-1 pb-2'
+                        )}
+                    ></button>
+                ))}
+                <AnimatePresence>
+                    {correctAttempt && (
+                        <motion.div
+                            animate={{ opacity: 1 }}
+                            initial={{ opacity: 0 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 z-10 size-full animate-radial-outwards bg-blue-radial-gradient bg-top text-2xl text-white"
+                        ></motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+            {/*</div>*/}
         </div>
     );
 }
