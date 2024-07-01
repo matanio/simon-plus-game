@@ -3,12 +3,15 @@ import Game from './Game.tsx';
 import { useState } from 'react';
 import InstructionsModal from './InstructionsModal.tsx';
 import Container from './Container.tsx';
+import GameOverModal from './GameOverModal.tsx';
 
 export default function ClassicMode() {
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [showInstructions, setShowInstructions] = useState<boolean>(true);
 
     const startGame = () => {
         setIsPlaying(true);
+        setShowInstructions(false);
     };
 
     return (
@@ -30,9 +33,14 @@ export default function ClassicMode() {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="absolute z-50 flex size-full items-start justify-center bg-slate-900/90 px-4 pt-8 "
+                        className="absolute z-50 flex size-full items-start justify-center bg-slate-900/90 px-4 pt-8"
                     >
-                        <InstructionsModal onStartClick={startGame} />
+                        {showInstructions && (
+                            <InstructionsModal onStartClick={startGame} />
+                        )}
+                        {!showInstructions && (
+                            <GameOverModal onPlayAgainClick={startGame} />
+                        )}
                     </motion.div>
                 )}
             </AnimatePresence>
