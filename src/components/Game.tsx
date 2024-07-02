@@ -17,9 +17,14 @@ export default function Game({
     isPlaying,
     setIsPlaying,
 }: GameProps) {
-    const [score, setScore] = useState(0);
-    const { highScore, setHighScore, isSoundOn, toggleSound } =
-        useClassicGameState();
+    const {
+        highScore,
+        isSoundOn,
+        toggleSound,
+        score,
+        resetScore,
+        incrementScore,
+    } = useClassicGameState();
     const [generatedSequence, setGeneratedSequence] = useState<number[]>([]);
 
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
@@ -36,7 +41,7 @@ export default function Game({
 
     const startGame = () => {
         Tone.start();
-        setScore(0);
+        resetScore();
         playSequence();
     };
 
@@ -62,14 +67,6 @@ export default function Game({
         }
         setIsButtonsDisabled(false);
         setSequenceClickCount(0);
-    };
-
-    const incrementScore = () => {
-        const newScore = score + 1;
-        if (newScore > highScore) {
-            setHighScore(newScore);
-        }
-        setScore(newScore);
     };
 
     const onTileClick = async (tile: number) => {
