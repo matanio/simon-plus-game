@@ -10,7 +10,7 @@ export const ClassicGameContext = createContext<ClassicGameStateContext | null>(
     null
 );
 
-interface GameContextProviderProps {
+interface ClassicGameContextProviderProps {
     children: ReactNode;
 }
 
@@ -22,7 +22,7 @@ interface GameContextProviderProps {
  */
 export const ClassicGameStateContextProvider = ({
     children,
-}: GameContextProviderProps) => {
+}: ClassicGameContextProviderProps) => {
     // Data
     const [highScore, setHighScore] = useLocalStorage<number>(
         'classic_high_score',

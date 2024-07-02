@@ -1,3 +1,4 @@
+import { cn, sleep } from '../lib/util.ts';
 import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -16,9 +17,9 @@ export default function Game({
     isPlaying,
     setIsPlaying,
 }: GameProps) {
-    const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
     const [score, setScore] = useState(0);
-    const { highScore, setHighScore } = useClassicGameState();
+    const { highScore, setHighScore, isSoundOn, toggleSound } =
+        useClassicGameState();
     const [generatedSequence, setGeneratedSequence] = useState<number[]>([]);
 
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
@@ -44,28 +45,6 @@ export default function Game({
             startGame();
         }
     }, [isPlaying]);
-
-    const colors = [
-        'bg-green-500/75',
-        'bg-red-600/75',
-        'bg-yellow-400/75',
-        'bg-blue-700/75',
-        'bg-purple-700/75',
-        'bg-orange-600/75',
-        'bg-gray-400/75',
-        'bg-pink-900/75',
-    ];
-
-    const flashColors = [
-        'bg-green-300',
-        'bg-red-300',
-        'bg-yellow-100',
-        'bg-blue-400',
-        'bg-purple-400',
-        'bg-orange-300',
-        'bg-gray-100',
-        'bg-pink-600',
-    ];
 
     const [tileColors, setTileColors] = useState<string[]>(colors);
 
@@ -133,14 +112,12 @@ export default function Game({
     };
 
     const playNote = (tile: number) => {
+        // TODO: double check sound issue where muted while playing doesn't mute the sound
         const notes = ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'];
+        console.log(isSoundOn);
         if (isSoundOn) {
             synth.triggerAttackRelease(notes[tile - 1], '5n');
         }
-    };
-
-    const toggleSound = () => {
-        setIsSoundOn(prev => !prev);
     };
 
     const flashCorrectTile = async () => {
@@ -201,3 +178,25 @@ export default function Game({
         </div>
     );
 }
+
+const colors = [
+    'bg-green-500/75',
+    'bg-red-600/75',
+    'bg-yellow-400/75',
+    'bg-blue-700/75',
+    'bg-purple-700/75',
+    'bg-orange-600/75',
+    'bg-gray-400/75',
+    'bg-pink-900/75',
+];
+
+const flashColors = [
+    'bg-green-300',
+    'bg-red-300',
+    'bg-yellow-100',
+    'bg-blue-400',
+    'bg-purple-400',
+    'bg-orange-300',
+    'bg-gray-100',
+    'bg-pink-600',
+];

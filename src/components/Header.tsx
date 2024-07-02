@@ -2,13 +2,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '../lib/util.ts';
 import { fadeInUpwards } from '../lib/animations.ts';
 import Container from './Container.tsx';
-import { Mode } from '../game/game.ts';
+import { useGeneralGameState } from '../game/game.ts';
 
-interface HeaderProps {
-    mode: Mode | null;
-}
+export default function Header() {
+    const { mode } = useGeneralGameState();
 
-export default function Header({ mode }: HeaderProps) {
     return (
         <AnimatePresence>
             <header
