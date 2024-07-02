@@ -1,4 +1,5 @@
 import { MouseEventHandler } from 'react';
+import { useClassicGameState } from '../game/game.ts';
 
 interface GameOverModalProps {
     onPlayAgainClick: MouseEventHandler<HTMLButtonElement>;
@@ -7,13 +8,15 @@ interface GameOverModalProps {
 export default function GameOverModal({
     onPlayAgainClick,
 }: GameOverModalProps) {
+    const { score, highScore } = useClassicGameState();
+
     return (
         <div className="flex w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-red-600 bg-red-200/[0.99] p-4 text-red-600 shadow">
             <h1 className="text-3xl font-extrabold uppercase ">Game Over 😭</h1>
             <div className="text-left">
                 {/* TODO: Update these fixed scores to use game state */}
-                <h2 className="text-2xl text-red-400">SCORE: 4</h2>
-                <h2 className="text-2xl">HIGH SCORE: 4</h2>
+                <h2 className="text-2xl text-red-400">SCORE: {score}</h2>
+                <h2 className="text-2xl">HIGH SCORE: {highScore}</h2>
             </div>
             <hr className="mt-2 h-1 w-1/2 border-2 border-red-400" />
             <button

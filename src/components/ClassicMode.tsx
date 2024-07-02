@@ -5,13 +5,23 @@ import InstructionsModal from './InstructionsModal.tsx';
 import Container from './Container.tsx';
 import GameOverModal from './GameOverModal.tsx';
 import { ClassicGameStateContextProvider } from '../contexts/ClassicGameContextProvider.tsx';
+import { useGeneralGameState } from '../game/game.ts';
 
 export default function ClassicMode() {
-    const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [showInstructions, setShowInstructions] = useState<boolean>(true);
+    const [showGameOver, setShowGameOver] = useState<boolean>(false);
+
+    const { isPlaying, setIsPlaying } = useGeneralGameState();
 
     const startGame = () => {
         setIsPlaying(true);
+        setShowInstructions(false);
+        setShowGameOver(false);
+    };
+
+    const handleGameOver = () => {
+        setIsPlaying(false);
+        setShowGameOver(true);
         setShowInstructions(false);
     };
 
@@ -24,11 +34,8 @@ export default function ClassicMode() {
                 className="relative grid size-full px-4 pb-12 pt-4"
             >
                 <Container>
-                    <Game
-                        isPlaying={isPlaying}
-                        numberOfTiles={4}
-                        setIsPlaying={setIsPlaying}
-                    />
+                    {/* Game starts when isPlaying is true */}
+                    <Game onGameOver={handleGameOver} numberOfTiles={4} />
                 </Container>
                 <AnimatePresence>
                     {!isPlaying && (
@@ -40,7 +47,7 @@ export default function ClassicMode() {
                             {showInstructions && (
                                 <InstructionsModal onStartClick={startGame} />
                             )}
-                            {!showInstructions && (
+                            {showGameOver && (
                                 <GameOverModal onPlayAgainClick={startGame} />
                             )}
                         </motion.div>

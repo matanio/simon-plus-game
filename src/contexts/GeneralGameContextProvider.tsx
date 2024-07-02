@@ -7,6 +7,8 @@ interface GeneralGameContext {
     mode: Mode | null; // null means no mode is selected yet
     setModeToClassic: () => void;
     setModeToDaily: () => void;
+    isPlaying: boolean; // State management for the game — are we mid-game?
+    setIsPlaying: (isPlaying: boolean) => void;
 }
 
 export const GeneralGameContext = createContext<GeneralGameContext | null>(
@@ -28,6 +30,7 @@ export const GeneralGameStateContextProvider = ({
 }: GeneralGameStateContextProps) => {
     const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
     const [mode, setMode] = useState<Mode | null>(null);
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
     const toggleSound = () => {
         setIsSoundOn(prev => !prev);
@@ -49,6 +52,8 @@ export const GeneralGameStateContextProvider = ({
                 mode,
                 setModeToClassic,
                 setModeToDaily,
+                isPlaying,
+                setIsPlaying,
             }}
         >
             {children}

@@ -6,17 +6,12 @@ import { useClassicGameState } from '../game/game.ts';
 
 interface GameProps {
     numberOfTiles: 4 | 6 | 8;
-    isPlaying: boolean;
-    setIsPlaying: (isPlaying: boolean) => void;
+    onGameOver: () => void;
 }
 
 const synth = new Tone.Synth().toDestination();
 
-export default function Game({
-    numberOfTiles,
-    isPlaying,
-    setIsPlaying,
-}: GameProps) {
+export default function Game({ numberOfTiles, onGameOver }: GameProps) {
     const {
         highScore,
         isSoundOn,
@@ -24,7 +19,8 @@ export default function Game({
         score,
         resetScore,
         incrementScore,
-    } = useClassicGameState();
+        isPlaying,
+    } = useClassicGameState(); // TODO: use based on mode
     const [generatedSequence, setGeneratedSequence] = useState<number[]>([]);
 
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
@@ -90,7 +86,7 @@ export default function Game({
             setGeneratedSequence([]);
             setIsButtonsDisabled(true);
             await flashCorrectTile();
-            setIsPlaying(false);
+            onGameOver();
         }
     };
 
