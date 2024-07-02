@@ -1,7 +1,8 @@
-import { cn, useLocalStorage } from '../lib/util.ts';
+import { cn } from '../lib/util.ts';
 import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useClassicGameState } from '../game/game.ts';
 
 interface GameProps {
     numberOfTiles: 4 | 6 | 8;
@@ -18,10 +19,7 @@ export default function Game({
 }: GameProps) {
     const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
     const [score, setScore] = useState(0);
-    const [highScore, setHighScore] = useLocalStorage<number>(
-        'classic_high_score',
-        0
-    );
+    const { highScore, setHighScore } = useClassicGameState();
     const [generatedSequence, setGeneratedSequence] = useState<number[]>([]);
 
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
@@ -162,7 +160,6 @@ export default function Game({
 
     return (
         <div className="relative flex aspect-square w-full flex-col items-center gap-4">
-            {/*<div className="">*/}
             <div className="grid w-full grid-cols-3 text-xl text-white">
                 <button className="justify-self-start" onClick={toggleSound}>
                     {isSoundOn ? '🔊' : '🔇'}
@@ -206,7 +203,6 @@ export default function Game({
                     )}
                 </AnimatePresence>
             </div>
-            {/*</div>*/}
         </div>
     );
 }
