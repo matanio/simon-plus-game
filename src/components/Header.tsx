@@ -2,11 +2,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '../lib/util.ts';
 import { fadeInUpwards } from '../lib/animations.ts';
 import Container from './Container.tsx';
-
-export type mode = 'classic' | 'daily';
+import { Mode } from '../game/game.ts';
 
 interface HeaderProps {
-    mode: mode | null;
+    mode: Mode | null;
 }
 
 export default function Header({ mode }: HeaderProps) {

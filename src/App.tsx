@@ -1,12 +1,13 @@
 import Footer from './components/Footer.tsx';
 import StartScreen from './components/StartScreen.tsx';
-import Header, { mode } from './components/Header.tsx';
+import Header from './components/Header.tsx';
 import { useState } from 'react';
 import ClassicMode from './components/ClassicMode.tsx';
 import { AnimatePresence } from 'framer-motion';
+import { Mode } from './game/game.ts';
 
 const App = () => {
-    const [mode, setMode] = useState<mode | null>(null);
+    const [mode, setMode] = useState<Mode | null>(null);
 
     const handleDailyClick = () => {
         setMode('daily');
