@@ -2,16 +2,17 @@ import { cn, sleep } from '../lib/util.ts';
 import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useClassicGameState } from '../game/game.ts';
+import { Mode, useGameState } from '../game/game.ts';
 
 interface GameProps {
     numberOfTiles: 4 | 6 | 8;
     onGameOver: () => void;
+    mode: Mode;
 }
 
 const synth = new Tone.Synth().toDestination();
 
-export default function Game({ numberOfTiles, onGameOver }: GameProps) {
+export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
     const {
         highScore,
         isSoundOn,
@@ -20,21 +21,17 @@ export default function Game({ numberOfTiles, onGameOver }: GameProps) {
         resetScore,
         incrementScore,
         isPlaying,
-    } = useClassicGameState(); // TODO: use based on mode
+    } = useGameState(mode);
+
+    // Local state
     const [generatedSequence, setGeneratedSequence] = useState<number[]>([]);
-
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
-
     const [sequenceClickCount, setSequenceClickCount] = useState(0);
-
     const [activeTile, setActiveTile] = useState<number | null>(null);
-
     const [correctAttempt, setCorrectAttempt] = useState(false);
+    const [tileColors, setTileColors] = useState<string[]>(colors);
 
-    const buildTiles = (numberOfTiles: number) => {
-        return Array.from({ length: numberOfTiles }, (_, index) => index + 1);
-    };
-
+    // Start Game Logic
     const startGame = () => {
         Tone.start();
         resetScore();
@@ -46,8 +43,6 @@ export default function Game({ numberOfTiles, onGameOver }: GameProps) {
             startGame();
         }
     }, [isPlaying]);
-
-    const [tileColors, setTileColors] = useState<string[]>(colors);
 
     const playSequence = async () => {
         setIsButtonsDisabled(true);
@@ -193,3 +188,7 @@ const flashColors = [
     'bg-gray-100',
     'bg-pink-600',
 ];
+
+const buildTiles = (numberOfTiles: number) => {
+    return Array.from({ length: numberOfTiles }, (_, index) => index + 1);
+};

@@ -35,7 +35,11 @@ export default function ClassicMode() {
             >
                 <Container>
                     {/* Game starts when isPlaying is true */}
-                    <Game onGameOver={handleGameOver} numberOfTiles={4} />
+                    <Game
+                        onGameOver={handleGameOver}
+                        numberOfTiles={4}
+                        mode="classic"
+                    />
                 </Container>
                 <AnimatePresence>
                     {!isPlaying && (

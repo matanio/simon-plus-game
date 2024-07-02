@@ -30,3 +30,19 @@ export const useGeneralGameState = () => {
 
     return generalContext;
 };
+
+/**
+ * Used exclusively for the Game component to manage which game state to use.
+ *
+ * @param mode
+ */
+export const useGameState = (mode: Mode) => {
+    switch (mode) {
+        case 'classic':
+            return useClassicGameState();
+        case 'daily':
+            throw new Error('Daily mode not implemented yet');
+        default:
+            throw new Error('Invalid mode');
+    }
+};
