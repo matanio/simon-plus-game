@@ -29,3 +29,7 @@ export function useLocalStorage<T>(
 export function clearLocalStorage(key: string) {
     window.localStorage.removeItem(key);
 }
+
+export const sleep = (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};

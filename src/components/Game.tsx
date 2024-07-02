@@ -1,4 +1,3 @@
-import { cn } from '../lib/util.ts';
 import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -117,10 +116,6 @@ export default function Game({
             await flashCorrectTile();
             setIsPlaying(false);
         }
-    };
-
-    const sleep = (ms: number) => {
-        return new Promise(resolve => setTimeout(resolve, ms));
     };
 
     const flashTile = (tile: number) => {
