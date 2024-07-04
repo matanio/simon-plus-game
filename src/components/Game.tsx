@@ -11,7 +11,6 @@ interface GameProps {
 }
 
 const synth = new Tone.Synth().toDestination();
-
 export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
     const {
         highScore,
@@ -39,9 +38,14 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
     };
 
     useEffect(() => {
-        if (isPlaying) {
-            startGame();
-        }
+        const startGameLogic = async () => {
+            if (isPlaying) {
+                await sleep(250); // Sleep to wait for modal animations to finish
+                startGame();
+            }
+        };
+
+        startGameLogic();
     }, [isPlaying]);
 
     const playSequence = async () => {
@@ -62,6 +66,7 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
 
     const onTileClick = async (tile: number) => {
         if (isButtonsDisabled) return;
+        setIsButtonsDisabled(true);
         playNote(tile);
         const isCorrectTile = tile === generatedSequence[sequenceClickCount];
         if (isCorrectTile) {
@@ -76,6 +81,7 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
                 playSequence();
             } else {
                 setSequenceClickCount(prev => prev + 1);
+                setIsButtonsDisabled(false);
             }
         } else {
             setGeneratedSequence([]);
@@ -100,12 +106,9 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
     };
 
     const playNote = (tile: number) => {
-        // TODO: double check sound issue where muted while playing doesn't mute the sound
         const notes = ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'];
         console.log(isSoundOn);
-        if (isSoundOn) {
-            synth.triggerAttackRelease(notes[tile - 1], '5n');
-        }
+        synth.triggerAttackRelease(notes[tile - 1], '5n');
     };
 
     const flashCorrectTile = async () => {
@@ -117,6 +120,11 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
             await sleep(250);
         }
     };
+
+    // Mute + Unmute
+    useEffect(() => {
+        synth.volume.value = isSoundOn ? 0 : -Infinity;
+    }, [isSoundOn]);
 
     return (
         <div className="relative flex aspect-square w-full flex-col items-center gap-4">
