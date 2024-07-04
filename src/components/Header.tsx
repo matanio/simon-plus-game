@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '../lib/util.ts';
-import { fadeInUpwards } from '../lib/animations.ts';
+import { fadeIn } from '../lib/animations.ts';
 import Container from './Container.tsx';
 import { useGeneralGameState } from '../game/game.ts';
 
@@ -18,7 +18,7 @@ export default function Header() {
                 {mode && (
                     <Container>
                         <motion.div
-                            variants={fadeInUpwards}
+                            variants={fadeIn}
                             initial="hidden"
                             animate="visible"
                             className="grid w-full grid-cols-3 items-center"

@@ -31,17 +31,12 @@ export const startScreenOverlayFade: Variants = {
     },
 };
 
-export const fadeInUpwards: Variants = {
-    hidden: { y: 400, opacity: 0, scale: 2 },
+export const fadeIn: Variants = {
+    hidden: { opacity: 0 },
     visible: {
-        y: 0,
-        scale: 1,
         opacity: 1,
         transition: {
-            duration: 0.2,
-            type: 'spring',
-            stiffness: 33,
-            ease: 'easeOut',
+            duration: 0.4,
         },
     },
 };
