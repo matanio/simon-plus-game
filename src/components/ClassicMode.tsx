@@ -46,7 +46,7 @@ export default function ClassicMode() {
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="absolute z-50 flex size-full items-start justify-center bg-slate-900/90 px-4 pt-8"
+                            className="absolute z-20 flex size-full items-start justify-center bg-slate-900/90 px-4 pt-8"
                         >
                             {showInstructions && (
                                 <InstructionsModal onStartClick={startGame} />

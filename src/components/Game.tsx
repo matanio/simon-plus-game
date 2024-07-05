@@ -150,7 +150,7 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
                         key={tile}
                         className={cn(
                             ` active:${flashColors[index]}`,
-                            'w-full rounded-xl z-50 hover:brightness-125 disabled:hover:filter-none shadow-push-button focus:outline-none active:translate-y-1 active:pb-2 active:shadow-push-button-active',
+                            'w-full rounded-xl hover:brightness-125 disabled:hover:filter-none shadow-push-button focus:outline-none active:translate-y-1 active:pb-2 active:shadow-push-button-active',
                             isButtonsDisabled &&
                                 'cursor-not-allowed pointer-events-none',
                             `${tileColors[index]}`,
