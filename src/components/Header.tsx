@@ -4,6 +4,7 @@ import { fadeIn, slideDown } from '../lib/animations.ts';
 import Container from './Container.tsx';
 import { useGeneralGameState } from '../game/game.ts';
 import { MouseEventHandler, useState } from 'react';
+import { InstrumentButton } from './InstrumentButton.tsx';
 
 interface SettingsProps {
     onCloseClick: MouseEventHandler;
@@ -43,7 +44,16 @@ function ChevronUp(props: { className?: string }) {
     );
 }
 
+type Instrument = 'synthesizer' | 'trumpet' | 'guitar';
+
 function Settings({ onCloseClick }: SettingsProps) {
+    const [activeInstrument, setActiveInstrument] =
+        useState<Instrument>('synthesizer');
+
+    const handleInstrumentClick = (instrument: Instrument) => {
+        setActiveInstrument(instrument);
+    };
+
     return (
         <motion.div
             variants={slideDown}
@@ -52,12 +62,27 @@ function Settings({ onCloseClick }: SettingsProps) {
             exit="hidden"
             className="grid grid-cols-4 justify-items-center rounded-xl rounded-t-none bg-slate-600 p-4 text-xs uppercase text-white"
         >
-            <div>
-                <div className="text-lg">Instrument</div>
-                <div className="flex flex-row justify-between text-lg">
-                    <div>a</div>
-                    <div>b</div>
-                    <div>c</div>
+            <div className="flex flex-col gap-1">
+                <div className="text-center text-lg">Instrument</div>
+                <div className="flex flex-row justify-between gap-2 text-lg">
+                    <InstrumentButton
+                        isActive={activeInstrument === 'synthesizer'}
+                        onClick={() => handleInstrumentClick('synthesizer')}
+                    >
+                        🎹
+                    </InstrumentButton>
+                    <InstrumentButton
+                        isActive={activeInstrument === 'trumpet'}
+                        onClick={() => handleInstrumentClick('trumpet')}
+                    >
+                        🎺
+                    </InstrumentButton>
+                    <InstrumentButton
+                        isActive={activeInstrument === 'guitar'}
+                        onClick={() => handleInstrumentClick('guitar')}
+                    >
+                        🎸
+                    </InstrumentButton>
                 </div>
             </div>
             <div>Speed</div>
