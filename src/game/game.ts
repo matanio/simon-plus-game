@@ -64,7 +64,7 @@ export const guitar = new Tone.Sampler({
         C4: 'twang_c5_f_rr1.wav',
     },
     release: 1,
-    baseUrl: 'samples/guitar/',
+    baseUrl: '/samples/guitar/',
     onload: () => {
         console.log('Guitar samples loaded!');
     },
