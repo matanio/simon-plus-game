@@ -10,7 +10,6 @@ interface GameProps {
     mode: Mode;
 }
 
-const synth = new Tone.Synth().toDestination();
 export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
     const {
         highScore,
@@ -20,6 +19,7 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
         resetScore,
         incrementScore,
         isPlaying,
+        playNote,
     } = useGameState(mode);
 
     // Local state
@@ -105,12 +105,6 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
         setActiveTile(null); // Reset the active tile
     };
 
-    const playNote = (tile: number) => {
-        const notes = ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'];
-        console.log(isSoundOn);
-        synth.triggerAttackRelease(notes[tile - 1], '5n');
-    };
-
     const flashCorrectTile = async () => {
         const NUMBER_OF_FLASHES = 3;
         for (let i = 0; i < NUMBER_OF_FLASHES; i++) {
@@ -120,11 +114,6 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
             await sleep(250);
         }
     };
-
-    // Mute + Unmute
-    useEffect(() => {
-        synth.volume.value = isSoundOn ? 0 : -Infinity;
-    }, [isSoundOn]);
 
     return (
         <div className="relative flex aspect-square w-full flex-col items-center gap-4">

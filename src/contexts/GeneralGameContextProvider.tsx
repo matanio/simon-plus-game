@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useState } from 'react';
-import { Mode } from '../game/game.ts';
+import { createContext, ReactNode, useEffect, useState } from 'react';
+import { guitar, Instrument, Mode, notes, synth } from '../game/game.ts';
 
 interface GeneralGameContext {
     isSoundOn: boolean;
@@ -9,6 +9,9 @@ interface GeneralGameContext {
     setModeToDaily: () => void;
     isPlaying: boolean; // State management for the game — are we mid-game?
     setIsPlaying: (isPlaying: boolean) => void;
+    playNote: (tile: number) => void;
+    instrument: Instrument;
+    setInstrument: (instrument: Instrument) => void;
 }
 
 export const GeneralGameContext = createContext<GeneralGameContext | null>(
@@ -31,6 +34,10 @@ export const GeneralGameStateContextProvider = ({
     const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
     const [mode, setMode] = useState<Mode | null>(null);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [instrument, setInstrument] = useState<Instrument>('synthesizer');
+
+    // TODO: update type
+    const [destination, setDestination] = useState<any>(synth.toDestination());
 
     const toggleSound = () => {
         setIsSoundOn(prev => !prev);
@@ -44,6 +51,31 @@ export const GeneralGameStateContextProvider = ({
         setMode('daily');
     };
 
+    const playNote = (tile: number) => {
+        destination.triggerAttackRelease(notes[tile - 1], '5n');
+    };
+
+    // Mute + Unmute
+    useEffect(() => {
+        destination.volume.value = isSoundOn ? 0 : -Infinity;
+    }, [isSoundOn]);
+
+    useEffect(() => {
+        console.log('Instrument changed');
+        switch (instrument) {
+            case 'synthesizer':
+                setDestination(synth.toDestination());
+                break;
+            case 'guitar':
+                setDestination(guitar.toDestination());
+                break;
+            default:
+                console.log('Not implemented yet');
+                setDestination(synth.toDestination()); // Default to synth
+                break;
+        }
+    }, [instrument]);
+
     return (
         <GeneralGameContext.Provider
             value={{
@@ -54,6 +86,9 @@ export const GeneralGameStateContextProvider = ({
                 setModeToDaily,
                 isPlaying,
                 setIsPlaying,
+                playNote,
+                instrument,
+                setInstrument,
             }}
         >
             {children}

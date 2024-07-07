@@ -47,11 +47,11 @@ function ChevronUp(props: { className?: string }) {
 type Instrument = 'synthesizer' | 'trumpet' | 'guitar';
 
 function Settings({ onCloseClick }: SettingsProps) {
-    const [activeInstrument, setActiveInstrument] =
-        useState<Instrument>('synthesizer');
+    const { instrument, setInstrument } = useGeneralGameState();
 
     const handleInstrumentClick = (instrument: Instrument) => {
-        setActiveInstrument(instrument);
+        console.log(instrument);
+        setInstrument(instrument);
     };
 
     return (
@@ -66,19 +66,19 @@ function Settings({ onCloseClick }: SettingsProps) {
                 <div className="text-center text-lg">Instrument</div>
                 <div className="flex flex-row justify-between gap-2 text-lg">
                     <InstrumentButton
-                        isActive={activeInstrument === 'synthesizer'}
+                        isActive={instrument === 'synthesizer'}
                         onClick={() => handleInstrumentClick('synthesizer')}
                     >
                         🎹
                     </InstrumentButton>
                     <InstrumentButton
-                        isActive={activeInstrument === 'trumpet'}
+                        isActive={instrument === 'trumpet'}
                         onClick={() => handleInstrumentClick('trumpet')}
                     >
                         🎺
                     </InstrumentButton>
                     <InstrumentButton
-                        isActive={activeInstrument === 'guitar'}
+                        isActive={instrument === 'guitar'}
                         onClick={() => handleInstrumentClick('guitar')}
                     >
                         🎸
