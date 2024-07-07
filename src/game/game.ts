@@ -50,8 +50,8 @@ export const useGameState = (mode: Mode) => {
 
 export type Instrument = 'synthesizer' | 'trumpet' | 'guitar';
 
+export const NOTES = ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'];
 export const synth = new Tone.Synth();
-export const notes = ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'];
 export const guitar = new Tone.Sampler({
     urls: {
         C3: 'twang_c4_f_rr1.wav', // Purposeful C3 to C4 mapping for ease of use
@@ -71,4 +71,7 @@ export const guitar = new Tone.Sampler({
     onerror: error => {
         console.error(error);
     },
-}).toDestination();
+});
+
+// Speed
+export type Speed = 'Normal' | 'Fast' | 'Fastest';

@@ -2,9 +2,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '../lib/util.ts';
 import { fadeIn, slideDown } from '../lib/animations.ts';
 import Container from './Container.tsx';
-import { useGeneralGameState } from '../game/game.ts';
+import { Speed, useGeneralGameState } from '../game/game.ts';
 import { MouseEventHandler, useState } from 'react';
 import { InstrumentButton } from './InstrumentButton.tsx';
+import { SpeedButton } from './SpeedButton.tsx';
 
 interface SettingsProps {
     onCloseClick: MouseEventHandler;
@@ -47,11 +48,16 @@ function ChevronUp(props: { className?: string }) {
 type Instrument = 'synthesizer' | 'trumpet' | 'guitar';
 
 function Settings({ onCloseClick }: SettingsProps) {
-    const { instrument, setInstrument } = useGeneralGameState();
+    const { instrument, setInstrument, speed, setSpeed } =
+        useGeneralGameState();
 
     const handleInstrumentClick = (instrument: Instrument) => {
         console.log(instrument);
         setInstrument(instrument);
+    };
+
+    const handleSpeedClick = (speed: Speed) => {
+        setSpeed(speed);
     };
 
     return (
@@ -63,8 +69,8 @@ function Settings({ onCloseClick }: SettingsProps) {
             className="grid grid-cols-4 justify-items-center rounded-xl rounded-t-none bg-slate-600 p-4 text-xs uppercase text-white"
         >
             <div className="flex flex-col gap-1">
-                <div className="text-center text-lg">Instrument</div>
-                <div className="flex flex-row justify-between gap-2 text-lg">
+                <div className="text-center text-lg"> Instrument 🎶</div>
+                <div className="grid grid-cols-3 gap-2 text-lg">
                     <InstrumentButton
                         isActive={instrument === 'synthesizer'}
                         onClick={() => handleInstrumentClick('synthesizer')}
@@ -85,7 +91,26 @@ function Settings({ onCloseClick }: SettingsProps) {
                     </InstrumentButton>
                 </div>
             </div>
-            <div>Speed</div>
+            <div className="flex flex-col gap-1">
+                <div className="text-center text-lg"> Speed ⚡️</div>
+                <div className="grid grid-cols-3 gap-2 text-lg">
+                    <SpeedButton
+                        speed="Normal"
+                        onClick={handleSpeedClick}
+                        isActive={speed === 'Normal'}
+                    />
+                    <SpeedButton
+                        speed="Fast"
+                        onClick={handleSpeedClick}
+                        isActive={speed === 'Fast'}
+                    />
+                    <SpeedButton
+                        speed="Fastest"
+                        onClick={handleSpeedClick}
+                        isActive={speed === 'Fastest'}
+                    />
+                </div>
+            </div>
             <div>Mode</div>
             <div className="col-start-4 justify-self-end">
                 <button

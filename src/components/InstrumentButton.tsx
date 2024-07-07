@@ -16,7 +16,7 @@ export const InstrumentButton = ({
         <button
             onClick={onClick}
             className={cn(
-                'grid aspect-square place-items-center rounded px-2 border-2 border-transparent',
+                'grid aspect-square place-items-center rounded border-2 border-transparent w-10',
                 isActive
                     ? 'bg-slate-100'
                     : 'hover:border-2 hover:border-slate-400 hover:bg-slate-500'

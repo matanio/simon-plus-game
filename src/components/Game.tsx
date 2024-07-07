@@ -20,6 +20,7 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
         incrementScore,
         isPlaying,
         playNote,
+        delay,
     } = useGameState(mode);
 
     // Local state
@@ -54,10 +55,12 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
         const newSequence = [...generatedSequence, randChoice];
         setGeneratedSequence(newSequence);
         for (let i = 0; i < newSequence.length; i++) {
-            await sleep(500);
+            // TODO: move to state?
+            const DIVIDER = 100; // Increase for more gradual increase
+            await sleep(delay / (1 + score / DIVIDER));
             playNote(newSequence[i]);
             flashTile(newSequence[i]);
-            await sleep(500);
+            await sleep(delay / (1 + score / DIVIDER));
             resetTile(newSequence[i]);
         }
         setIsButtonsDisabled(false);

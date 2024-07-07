@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
-import { guitar, Instrument, Mode, notes, synth } from '../game/game.ts';
+import { guitar, Instrument, Mode, NOTES, Speed, synth } from '../game/game.ts';
 
 interface GeneralGameContext {
     isSoundOn: boolean;
@@ -12,6 +12,9 @@ interface GeneralGameContext {
     playNote: (tile: number) => void;
     instrument: Instrument;
     setInstrument: (instrument: Instrument) => void;
+    speed: Speed;
+    setSpeed: (speed: Speed) => void;
+    delay: number;
 }
 
 export const GeneralGameContext = createContext<GeneralGameContext | null>(
@@ -35,9 +38,12 @@ export const GeneralGameStateContextProvider = ({
     const [mode, setMode] = useState<Mode | null>(null);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [instrument, setInstrument] = useState<Instrument>('synthesizer');
+    const [speed, setSpeed] = useState<Speed>('Normal');
 
     // TODO: update type
     const [destination, setDestination] = useState<any>(synth.toDestination());
+
+    const [delay, setDelay] = useState<number>(500);
 
     const toggleSound = () => {
         setIsSoundOn(prev => !prev);
@@ -52,7 +58,7 @@ export const GeneralGameStateContextProvider = ({
     };
 
     const playNote = (tile: number) => {
-        destination.triggerAttackRelease(notes[tile - 1], '5n');
+        destination.triggerAttackRelease(NOTES[tile - 1], '5n');
     };
 
     // Mute + Unmute
@@ -60,6 +66,7 @@ export const GeneralGameStateContextProvider = ({
         destination.volume.value = isSoundOn ? 0 : -Infinity;
     }, [isSoundOn]);
 
+    // Instrument Change
     useEffect(() => {
         console.log('Instrument changed');
         switch (instrument) {
@@ -76,6 +83,19 @@ export const GeneralGameStateContextProvider = ({
         }
     }, [instrument]);
 
+    useEffect(() => {
+        switch (speed) {
+            case 'Fast':
+                setDelay(300);
+                break;
+            case 'Fastest':
+                setDelay(150);
+                break;
+            default:
+                setDelay(500);
+        }
+    }, [speed]);
+
     return (
         <GeneralGameContext.Provider
             value={{
@@ -89,6 +109,9 @@ export const GeneralGameStateContextProvider = ({
                 playNote,
                 instrument,
                 setInstrument,
+                speed,
+                setSpeed,
+                delay,
             }}
         >
             {children}
