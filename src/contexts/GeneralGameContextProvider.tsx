@@ -1,5 +1,13 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
-import { guitar, Instrument, Mode, NOTES, Speed, synth } from '../game/game.ts';
+import {
+    guitar,
+    Instrument,
+    Mode,
+    NOTES,
+    Speed,
+    synth,
+    trumpet,
+} from '../game/game.ts';
 
 interface GeneralGameContext {
     isSoundOn: boolean;
@@ -68,7 +76,6 @@ export const GeneralGameStateContextProvider = ({
 
     // Instrument Change
     useEffect(() => {
-        console.log('Instrument changed');
         switch (instrument) {
             case 'synthesizer':
                 setDestination(synth.toDestination());
@@ -76,8 +83,10 @@ export const GeneralGameStateContextProvider = ({
             case 'guitar':
                 setDestination(guitar.toDestination());
                 break;
+            case 'trumpet':
+                setDestination(trumpet.toDestination());
+                break;
             default:
-                console.log('Not implemented yet');
                 setDestination(synth.toDestination()); // Default to synth
                 break;
         }

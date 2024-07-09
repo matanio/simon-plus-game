@@ -72,6 +72,26 @@ export const guitar = new Tone.Sampler({
         console.error(error);
     },
 });
+export const trumpet = new Tone.Sampler({
+    urls: {
+        C3: 'Sum_SHTrumpet_sus_C3_v1_rr1.wav', // Purposeful incorrect mapping for ease of use
+        D3: 'Sum_SHTrumpet_sus_D4_v1_rr1.wav',
+        E3: 'Sum_SHTrumpet_sus_Ds3_v1_rr1.wav',
+        F3: 'Sum_SHTrumpet_sus_F4_v1_rr1.wav',
+        G3: 'Sum_SHTrumpet_sus_G3_v1_rr1.wav',
+        A3: 'Sum_SHTrumpet_sus_A2_v1_rr1.wav',
+        B3: 'Sum_SHTrumpet_sus_As3_v1_rr1.wav',
+        C4: 'Sum_SHTrumpet_sus_C5_v1_rr1.wav',
+    },
+    release: 1,
+    baseUrl: '/samples/trumpet/',
+    onload: () => {
+        console.log('Trumpet samples loaded!');
+    },
+    onerror: error => {
+        console.error(error);
+    },
+});
 
 // Speed
 export type Speed = 'Normal' | 'Fast' | 'Fastest';
