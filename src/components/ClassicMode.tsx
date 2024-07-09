@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import Game from './Game.tsx';
 import { useState } from 'react';
-import InstructionsModal from './InstructionsModal.tsx';
+import ClassicInstructionsModal from './ClassicInstructionsModal.tsx';
 import Container from './Container.tsx';
 import GameOverModal from './GameOverModal.tsx';
 import { ClassicGameStateContextProvider } from '../contexts/ClassicGameContextProvider.tsx';
@@ -49,7 +49,9 @@ export default function ClassicMode() {
                             className="absolute z-20 flex size-full items-start justify-center bg-slate-900/90 px-4 pt-8"
                         >
                             {showInstructions && (
-                                <InstructionsModal onStartClick={startGame} />
+                                <ClassicInstructionsModal
+                                    onStartClick={startGame}
+                                />
                             )}
                             {showGameOver && (
                                 <GameOverModal onPlayAgainClick={startGame} />

@@ -4,7 +4,7 @@ interface InstructionsModalProps {
     onStartClick: MouseEventHandler<HTMLButtonElement>;
 }
 
-export default function InstructionsModal({
+export default function ClassicInstructionsModal({
     onStartClick,
 }: InstructionsModalProps) {
     return (
