@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { cn } from '../lib/util.ts';
+import { cn, useOutsideClick } from '../lib/util.ts';
 import { fadeIn, slideDown } from '../lib/animations.ts';
 import Container from './Container.tsx';
 import { Speed, useGeneralGameState } from '../game/game.ts';
-import { MouseEventHandler, useState } from 'react';
+import { MouseEventHandler, useRef, useState } from 'react';
 import { InstrumentButton } from './InstrumentButton.tsx';
 import { SpeedButton } from './SpeedButton.tsx';
 
@@ -66,9 +66,9 @@ function Settings({ onCloseClick }: SettingsProps) {
             animate="visible"
             initial="hidden"
             exit="hidden"
-            className="grid grid-cols-4 justify-items-center rounded-xl rounded-t-none bg-slate-600 p-4 text-xs uppercase text-white"
+            className="flex flex-col justify-items-center gap-4 rounded-xl rounded-t-none bg-slate-600 p-4 text-xs uppercase text-white sm:grid sm:grid-cols-4 sm:gap-0"
         >
-            <div className="flex flex-col gap-1">
+            <div className="col-start-2 -mt-9 flex flex-col items-center gap-1 sm:mt-auto">
                 <div className="text-center text-lg"> Instrument 🎶</div>
                 <div className="grid grid-cols-3 gap-2 text-lg">
                     <InstrumentButton
@@ -91,7 +91,7 @@ function Settings({ onCloseClick }: SettingsProps) {
                     </InstrumentButton>
                 </div>
             </div>
-            <div className="flex flex-col gap-1">
+            <div className="col-start-3 flex flex-col items-center gap-1">
                 <div className="text-center text-lg"> Speed ⚡️</div>
                 <div className="grid grid-cols-3 gap-2 text-lg">
                     <SpeedButton
@@ -111,8 +111,7 @@ function Settings({ onCloseClick }: SettingsProps) {
                     />
                 </div>
             </div>
-            <div>Mode</div>
-            <div className="col-start-4 justify-self-end">
+            <div className="z-20 order-first col-start-4 self-end sm:z-auto sm:order-none sm:self-auto sm:justify-self-end">
                 <button
                     onClick={onCloseClick}
                     className="group flex flex-row gap-1 text-sm "
@@ -134,6 +133,12 @@ export default function Header() {
 
     const [showSettings, setShowSettings] = useState(false);
 
+    const settingsRef = useRef<HTMLDivElement | null>(null);
+
+    useOutsideClick(settingsRef, () => {
+        toggleSettings();
+    });
+
     const toggleSettings = () => {
         setShowSettings(!showSettings);
     };
@@ -148,7 +153,10 @@ export default function Header() {
                         <div className="relative">
                             <AnimatePresence>
                                 {showSettings && (
-                                    <div className="absolute inset-0 -mx-4">
+                                    <div
+                                        ref={settingsRef}
+                                        className="absolute inset-0 -mx-4"
+                                    >
                                         <Settings
                                             onCloseClick={toggleSettings}
                                         />
