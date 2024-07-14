@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import Game from './Game.tsx';
 import { useState } from 'react';
-import ClassicInstructionsModal from './ClassicInstructionsModal.tsx';
 import Container from './Container.tsx';
 import GameOverModal from './GameOverModal.tsx';
 import { ClassicGameStateContextProvider } from '../contexts/ClassicGameContextProvider.tsx';
 import { useGeneralGameState } from '../game/game.ts';
+import { ClassicInstructionsModal } from './InstructionsModals.tsx';
 
 export default function ClassicMode() {
     const [showInstructions, setShowInstructions] = useState<boolean>(true);

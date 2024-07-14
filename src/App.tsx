@@ -4,6 +4,7 @@ import Header from './components/Header.tsx';
 import ClassicMode from './components/ClassicMode.tsx';
 import { AnimatePresence } from 'framer-motion';
 import { useGeneralGameState } from './game/game.ts';
+import DailyMode from './components/DailyMode.tsx';
 
 const App = () => {
     const { mode, setModeToClassic, setModeToDaily } = useGeneralGameState();
@@ -20,9 +21,8 @@ const App = () => {
                         />
                     )}
                     {mode === 'classic' && <ClassicMode />}
+                    {mode === 'daily' && <DailyMode />}
                 </AnimatePresence>
-                {/* TODO */}
-                {/*<ClassicMode />*/}
             </main>
 
             <div className="justify-self-end">
