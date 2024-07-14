@@ -57,3 +57,28 @@ export function useOutsideClick(
         };
     }, [ref, callback]);
 }
+
+/**
+ * Formats a date as a string in the format "Month Day, Year". e.g. "January 1, 2022".
+ * @param date
+ */
+export const formatDateAsMonthDayYear = (date: Date): string => {
+    const year = date.getFullYear();
+    const monthNames = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+    ];
+    const month = monthNames[date.getMonth()]; // Months are 0 indexed so no need to +1
+    const day = date.getDate();
+    return `${month} ${day}, ${year}`;
+};
