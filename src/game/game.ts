@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { ClassicGameContext } from '../contexts/ClassicGameContextProvider.tsx';
 import { GeneralGameContext } from '../contexts/GeneralGameContextProvider.tsx';
 import * as Tone from 'tone';
+import { DailyGameContext } from '../contexts/DailyGameContextProvider.tsx';
 
 export type Mode = 'classic' | 'daily';
 
@@ -21,6 +22,22 @@ export const useClassicGameState = () => {
     return { ...generalContext, ...classicContext };
 };
 
+/**
+ * Custom hook to access the daily game state.
+ */
+export const useDailyGameState = () => {
+    const dailyContext = useContext(DailyGameContext);
+
+    if (!dailyContext)
+        throw new Error(
+            'useDailyGameState must be used inside the DailyGameContextProvider'
+        );
+
+    const generalContext = useGeneralGameState();
+
+    return { ...generalContext, ...dailyContext };
+};
+
 export const useGeneralGameState = () => {
     const generalContext = useContext(GeneralGameContext);
 
@@ -33,7 +50,7 @@ export const useGeneralGameState = () => {
 };
 
 /**
- * Used exclusively for the Game component to manage which game state to use.
+ * Used exclusively for the ClassicGame component to manage which game state to use.
  *
  * @param mode
  */
@@ -42,10 +59,19 @@ export const useGameState = (mode: Mode) => {
         case 'classic':
             return useClassicGameState();
         case 'daily':
-            throw new Error('Daily mode not implemented yet');
+            return useDailyGameState();
         default:
             throw new Error('Invalid mode');
     }
+};
+
+export const generateDailyGameSequence = (
+    date: Date = new Date(),
+    numberOfTiles: number = 4,
+    maximumLength: number = 20 // TODO: update
+) => {
+    // TODO: implement
+    return [1, 2, 1, 3, 4, 2, 3, 1, 1, 3, 1, 1, 3, 2, 4, 3, 4, 2, 3, 3];
 };
 
 export type Instrument = 'synthesizer' | 'trumpet' | 'guitar';

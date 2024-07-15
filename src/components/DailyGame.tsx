@@ -2,17 +2,18 @@ import { cn, sleep } from '../lib/util.ts';
 import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Mode, useGameState } from '../game/game.ts';
+import { useDailyGameState } from '../game/game.ts';
 
-interface GameProps {
+interface DailyGameProps {
     numberOfTiles: 4 | 6 | 8;
     onGameOver: () => void;
-    mode: Mode;
 }
 
-export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
+export default function DailyGame({
+    numberOfTiles,
+    onGameOver,
+}: DailyGameProps) {
     const {
-        highScore,
         isSoundOn,
         toggleSound,
         score,
@@ -21,21 +22,24 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
         isPlaying,
         playNote,
         delay,
-    } = useGameState(mode);
+        decrementMistakesRemaining,
+        mistakesRemaining,
+        sequence,
+    } = useDailyGameState();
 
     // Local state
-    const [generatedSequence, setGeneratedSequence] = useState<number[]>([]);
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
     const [sequenceClickCount, setSequenceClickCount] = useState(0);
     const [activeTile, setActiveTile] = useState<number | null>(null);
     const [correctAttempt, setCorrectAttempt] = useState(false);
     const [tileColors, setTileColors] = useState<string[]>(colors);
+    const [currentSequenceIndex, setCurrentSequenceIndex] = useState(0);
 
     // Start Game Logic
     const startGame = () => {
         Tone.start();
         resetScore();
-        playSequence();
+        playDailySequence(0);
     };
 
     useEffect(() => {
@@ -49,19 +53,18 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
         startGameLogic();
     }, [isPlaying]);
 
-    const playSequence = async () => {
+    const playDailySequence = async (newSequenceIndex: number) => {
         setIsButtonsDisabled(true);
-        const randChoice = Math.floor(Math.random() * numberOfTiles) + 1;
-        const newSequence = [...generatedSequence, randChoice];
-        setGeneratedSequence(newSequence);
-        for (let i = 0; i < newSequence.length; i++) {
+        console.log(`SCORE: ${score}`);
+        console.log(`SEQUENCE: ${sequence}`);
+        for (let i = 0; i <= newSequenceIndex; i++) {
+            console.log(`CURR: ${sequence[i]}`);
             // TODO: move to state?
-            const DIVIDER = 100; // Increase for more gradual increase
-            await sleep(delay / (1 + score / DIVIDER));
-            playNote(newSequence[i]);
-            flashTile(newSequence[i]);
-            await sleep(delay / (1 + score / DIVIDER));
-            resetTile(newSequence[i]);
+            await sleep(delay);
+            playNote(sequence[i]);
+            flashTile(sequence[i]);
+            await sleep(delay);
+            resetTile(sequence[i]);
         }
         setIsButtonsDisabled(false);
         setSequenceClickCount(0);
@@ -71,26 +74,40 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
         if (isButtonsDisabled) return;
         setIsButtonsDisabled(true);
         playNote(tile);
-        const isCorrectTile = tile === generatedSequence[sequenceClickCount];
+        const isCorrectTile = tile === sequence[sequenceClickCount];
+        console.log(isCorrectTile);
         if (isCorrectTile) {
-            const isLastTile =
-                sequenceClickCount === generatedSequence.length - 1;
+            console.log(sequenceClickCount);
+            console.log(score);
+            const isLastTile = sequenceClickCount === score;
+            console.log(isLastTile);
             if (isLastTile) {
                 // do it again
                 setCorrectAttempt(true);
                 await sleep(600);
                 incrementScore();
+                setCurrentSequenceIndex(currentSequenceIndex + 1);
                 setCorrectAttempt(false);
-                playSequence();
+                playDailySequence(currentSequenceIndex + 1);
             } else {
                 setSequenceClickCount(prev => prev + 1);
                 setIsButtonsDisabled(false);
             }
         } else {
-            setGeneratedSequence([]);
-            setIsButtonsDisabled(true);
-            await flashCorrectTile();
-            onGameOver();
+            console.log(mistakesRemaining);
+            // First check if we have any mistakes remaining
+            if (mistakesRemaining > 0) {
+                // TODO: do something here
+                decrementMistakesRemaining();
+                setCorrectAttempt(false);
+                await flashCorrectTile();
+                setIsButtonsDisabled(false);
+            } else {
+                // Game over
+                setCorrectAttempt(false);
+                await flashCorrectTile();
+                onGameOver();
+            }
         }
     };
 
@@ -111,9 +128,9 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
     const flashCorrectTile = async () => {
         const NUMBER_OF_FLASHES = 3;
         for (let i = 0; i < NUMBER_OF_FLASHES; i++) {
-            flashTile(generatedSequence[sequenceClickCount]);
+            flashTile(sequence[sequenceClickCount]);
             await sleep(250);
-            resetTile(generatedSequence[sequenceClickCount]);
+            resetTile(sequence[sequenceClickCount]);
             await sleep(250);
         }
     };
@@ -125,7 +142,7 @@ export default function Game({ numberOfTiles, onGameOver, mode }: GameProps) {
                     {isSoundOn ? '🔊' : '🔇'}
                 </button>
                 <div className="justify-self-center">Score: {score}</div>
-                <div className="justify-self-end">Highscore: {highScore}</div>
+                {/*<div className="justify-self-end">Highscore: {highScore}</div>*/}
             </div>
             <div
                 className={cn(

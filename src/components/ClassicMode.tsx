@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import Game from './Game.tsx';
+import ClassicGame from './ClassicGame.tsx';
 import { useState } from 'react';
 import Container from './Container.tsx';
 import GameOverModal from './GameOverModal.tsx';
@@ -34,8 +34,8 @@ export default function ClassicMode() {
                 className="relative grid size-full px-4 pb-12 pt-4"
             >
                 <Container>
-                    {/* Game starts when isPlaying is true */}
-                    <Game
+                    {/* ClassicGame starts when isPlaying is true */}
+                    <ClassicGame
                         onGameOver={handleGameOver}
                         numberOfTiles={4}
                         mode="classic"

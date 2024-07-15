@@ -5,6 +5,8 @@ import { MouseEventHandler, useState } from 'react';
 import { formatDateAsMonthDayYear } from '../lib/util.ts';
 import { Logo } from './Logo.tsx';
 import { DailyInstructionsModal } from './InstructionsModals.tsx';
+import { DailyGameStateContextProvider } from '../contexts/DailyGameContextProvider.tsx';
+import DailyGame from './DailyGame.tsx';
 
 interface TitleScreenProps {
     onStartClick: MouseEventHandler;
@@ -33,56 +35,64 @@ function TitleScreen({ onStartClick }: TitleScreenProps) {
 }
 
 export default function DailyMode() {
-    const { isPlaying } = useGeneralGameState();
+    const { isPlaying, setIsPlaying } = useGeneralGameState();
 
     const [showTitleScreen, setShowTitleScreen] = useState<boolean>(true);
-    const [showInstructions, setShowInstructions] = useState<boolean>(true);
+    const [showInstructions, setShowInstructions] = useState<boolean>(false);
 
     function handleTitleStartClick() {
         setShowTitleScreen(false);
         setShowInstructions(true);
     }
 
-    function startGame() {}
+    function startGame() {
+        setShowTitleScreen(false);
+        setIsPlaying(true);
+    }
+
+    function handleGameOver() {
+        console.log('game over');
+    }
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="relative grid size-full px-4 pb-12 pt-4"
-        >
-            <Container>
-                {showTitleScreen && (
-                    <TitleScreen
-                        onStartClick={() => setShowTitleScreen(false)}
-                    />
-                )}
-                {/*{!showTitleScreen && (*/}
-                {/*    // Game starts when isPlaying is true*/}
-                {/*    <Game*/}
-                {/*        onGameOver={handleGameOver}*/}
-                {/*        numberOfTiles={4}*/}
-                {/*        mode="daily"*/}
-                {/*    />*/}
-                {/*)}*/}
-            </Container>
-            <AnimatePresence>
-                {!isPlaying && !showTitleScreen && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="absolute z-20 flex size-full items-start justify-center bg-slate-900/90 px-4 pt-8"
-                    >
-                        {showInstructions && (
-                            <DailyInstructionsModal onStartClick={startGame} />
-                        )}
-                        {/*{showGameOver && (*/}
-                        {/*    <GameOverModal onPlayAgainClick={startGame} />*/}
-                        {/*)}*/}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </motion.div>
+        <DailyGameStateContextProvider>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.5 }}
+                className="relative grid size-full px-4 pb-12 pt-4"
+            >
+                <Container>
+                    {showTitleScreen && (
+                        <TitleScreen onStartClick={handleTitleStartClick} />
+                    )}
+                    {!showTitleScreen && (
+                        // ClassicGame starts when isPlaying is true
+                        <DailyGame
+                            onGameOver={handleGameOver}
+                            numberOfTiles={4}
+                        />
+                    )}
+                </Container>
+                <AnimatePresence>
+                    {!isPlaying && !showTitleScreen && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="absolute z-20 flex size-full items-start justify-center bg-slate-900/90 px-4 pt-8"
+                        >
+                            {showInstructions && (
+                                <DailyInstructionsModal
+                                    onStartClick={startGame}
+                                />
+                            )}
+                            {/*{showGameOver && (*/}
+                            {/*    <GameOverModal onPlayAgainClick={startGame} />*/}
+                            {/*)}*/}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </motion.div>
+        </DailyGameStateContextProvider>
     );
 }
