@@ -8,6 +8,10 @@ import {
     useState,
 } from 'react';
 
+/**
+ * Combines multiple class names into a single string using twMerge and clsx.
+ * @param inputs
+ */
 export const cn = (...inputs: ClassValue[]): string => {
     return twMerge(clsx(inputs));
 };

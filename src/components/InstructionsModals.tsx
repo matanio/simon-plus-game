@@ -104,7 +104,7 @@ export function DailyInstructionsModal({
                 </div>
                 <button
                     onClick={onStartClick}
-                    className="rounded-full border-4 border-white bg-green-600 px-4 py-2 text-3xl text-green-50 shadow transition-colors hover:bg-green-500 hover:text-green-200"
+                    className="rounded-full border-4 border-sky-100 bg-blue-600 px-4 py-2 text-3xl text-white shadow transition-colors hover:cursor-pointer hover:bg-blue-500 hover:text-blue-200"
                 >
                     START
                 </button>

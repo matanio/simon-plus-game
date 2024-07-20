@@ -12,6 +12,7 @@ const App = () => {
     return (
         <div className="flex h-screen flex-col">
             <Header />
+
             <main className="grow bg-slate-900">
                 <AnimatePresence>
                     {!mode && (

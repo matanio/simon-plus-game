@@ -13,6 +13,7 @@ interface DailyGameStateContext {
     mistakesRemaining: number;
     decrementMistakesRemaining: () => void;
     sequence: number[];
+    getFormattedResults: () => string;
 }
 
 export const DailyGameContext = createContext<DailyGameStateContext | null>(
@@ -77,12 +78,30 @@ export const DailyGameStateContextProvider = ({
         setScore(prev => prev + 1); // TODO; update to prev
     };
 
-    useEffect(() => {
-        console.log('score updated');
-    }, [score]);
-
     const resetScore = () => {
         setScore(0);
+    };
+
+    const getFormattedResults = () => {
+        let emojis: string = '';
+        switch (true) {
+            case score > 50:
+                emojis = '🎉🎉🎉';
+                break;
+            case score > 30:
+                emojis = '🎉🎉';
+                break;
+            case score > 20:
+                emojis = '🎉';
+                break;
+            case score > 15:
+                emojis = '👍👍';
+                break;
+            default:
+                emojis = '👍';
+                break;
+        }
+        return `S+ Daily ${lastDate}: \n ${score} | ${emojis}`;
     };
 
     return (
@@ -94,6 +113,7 @@ export const DailyGameStateContextProvider = ({
                 mistakesRemaining,
                 decrementMistakesRemaining,
                 sequence,
+                getFormattedResults,
             }}
         >
             {children}
