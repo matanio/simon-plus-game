@@ -18,7 +18,6 @@ export default function DailyGame({
         isSoundOn,
         toggleSound,
         score,
-        resetScore,
         incrementScore,
         isPlaying,
         playNote,

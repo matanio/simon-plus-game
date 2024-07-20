@@ -129,7 +129,7 @@ function Settings({ onCloseClick }: SettingsProps) {
 }
 
 export default function Header() {
-    const { mode } = useGeneralGameState();
+    const { mode, setModeToNull } = useGeneralGameState();
 
     const [showSettings, setShowSettings] = useState(false);
 
@@ -143,6 +143,9 @@ export default function Header() {
         setShowSettings(!showSettings);
     };
 
+    const goHome = () => {
+        setModeToNull();
+    };
     return (
         <AnimatePresence>
             <header
@@ -169,6 +172,17 @@ export default function Header() {
                                 animate="visible"
                                 className="grid w-full grid-cols-3 items-center py-4    "
                             >
+                                <button
+                                    onClick={goHome}
+                                    className="group flex flex-row gap-1 justify-self-start text-white"
+                                >
+                                    <span className="self-start text-sm ">
+                                        🏠
+                                    </span>
+                                    <span className="invisible mt-[0.0625rem] text-sm uppercase group-hover:visible">
+                                        HOME
+                                    </span>
+                                </button>
                                 <div className="col-start-2 flex flex-row items-center justify-center gap-1">
                                     <h1 className="text-3xl font-bold text-white">
                                         Simon+

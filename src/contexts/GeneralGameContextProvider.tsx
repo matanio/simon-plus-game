@@ -15,6 +15,7 @@ interface GeneralGameContext {
     mode: Mode | null; // null means no mode is selected yet
     setModeToClassic: () => void;
     setModeToDaily: () => void;
+    setModeToNull: () => void;
     isPlaying: boolean; // State management for the game — are we mid-game?
     setIsPlaying: (isPlaying: boolean) => void;
     playNote: (tile: number) => void;
@@ -65,6 +66,10 @@ export const GeneralGameStateContextProvider = ({
         setMode('daily');
     };
 
+    const setModeToNull = () => {
+        setMode(null);
+    };
+
     const playNote = (tile: number) => {
         destination.triggerAttackRelease(NOTES[tile - 1], '5n');
     };
@@ -113,6 +118,7 @@ export const GeneralGameStateContextProvider = ({
                 mode,
                 setModeToClassic,
                 setModeToDaily,
+                setModeToNull,
                 isPlaying,
                 setIsPlaying,
                 playNote,
