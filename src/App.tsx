@@ -1,6 +1,6 @@
-import Footer from './components/Footer.tsx';
+import Footer from './components/footer/Footer.tsx';
 import StartScreen from './components/StartScreen.tsx';
-import Header from './components/Header.tsx';
+import Header from './components/header/Header.tsx';
 import ClassicMode from './components/classic/ClassicMode.tsx';
 import { AnimatePresence } from 'framer-motion';
 import { useGeneralGameState } from './game/game.ts';

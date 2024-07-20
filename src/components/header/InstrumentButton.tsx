@@ -1,4 +1,4 @@
-import { cn } from '../lib/util.ts';
+import { cn } from '../../lib/util.ts';
 import { MouseEventHandler, ReactNode } from 'react';
 
 interface InstrumentButtonProps {

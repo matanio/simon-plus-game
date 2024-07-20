@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { startScreenOverlayFade } from '../lib/animations.ts';
 import React from 'react';
-import NewTag from './NewTag.tsx';
 import StartScreenGrid from './StartScreenGrid.tsx';
+import { NewTag } from './Tags.tsx';
 
 interface StartScreenProps {
     onDailyClick: React.MouseEventHandler<HTMLButtonElement>;

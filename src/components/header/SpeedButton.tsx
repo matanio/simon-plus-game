@@ -1,5 +1,5 @@
-import { cn } from '../lib/util.ts';
-import { Speed } from '../game/game.ts';
+import { cn } from '../../lib/util.ts';
+import { Speed } from '../../game/game.ts';
 
 interface SpeedButtonProps {
     isActive: boolean;
