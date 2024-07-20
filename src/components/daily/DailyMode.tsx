@@ -42,22 +42,22 @@ export default function DailyMode() {
     const [showInstructions, setShowInstructions] = useState<boolean>(false);
     const [showGameOver, setShowGameOver] = useState<boolean>(false);
 
-    function handleTitleStartClick() {
+    const handleTitleStartClick = () => {
         setShowTitleScreen(false);
         setShowInstructions(true);
-    }
+    };
 
-    function startGame() {
+    const startGame = () => {
         setShowTitleScreen(false);
         setShowInstructions(false);
         setIsPlaying(true);
-    }
+    };
 
-    function handleGameOver() {
+    const handleGameOver = () => {
         setShowInstructions(false);
         setIsPlaying(false);
         setShowGameOver(true);
-    }
+    };
 
     const calculateNumberOfTiles = getNumberOfTilesToday();
 
