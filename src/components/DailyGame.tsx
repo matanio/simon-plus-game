@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useDailyGameState } from '../game/game.ts';
+import { DEFAULT_MISTAKES_REMAINING } from '../contexts/DailyGameContextProvider.tsx';
 
 interface DailyGameProps {
     numberOfTiles: 4 | 6 | 8;
@@ -33,17 +34,16 @@ export default function DailyGame({
     const [activeTile, setActiveTile] = useState<number | null>(null);
     const [correctAttempt, setCorrectAttempt] = useState(false);
     const [tileColors, setTileColors] = useState<string[]>(colors);
-    const [currentSequenceIndex, setCurrentSequenceIndex] = useState(0);
 
     // Start Game Logic
     const startGame = () => {
         Tone.start();
-        resetScore();
-        playDailySequence(0);
+        playDailySequence(score);
     };
 
     useEffect(() => {
         const startGameLogic = async () => {
+            if (mistakesRemaining === 0) onGameOver();
             if (isPlaying) {
                 await sleep(250); // Sleep to wait for modal animations to finish
                 startGame();
@@ -75,20 +75,16 @@ export default function DailyGame({
         setIsButtonsDisabled(true);
         playNote(tile);
         const isCorrectTile = tile === sequence[sequenceClickCount];
-        console.log(isCorrectTile);
         if (isCorrectTile) {
-            console.log(sequenceClickCount);
-            console.log(score);
             const isLastTile = sequenceClickCount === score;
-            console.log(isLastTile);
             if (isLastTile) {
                 // do it again
                 setCorrectAttempt(true);
                 await sleep(600);
+                const newScore = score + 1;
                 incrementScore();
-                setCurrentSequenceIndex(currentSequenceIndex + 1);
                 setCorrectAttempt(false);
-                playDailySequence(currentSequenceIndex + 1);
+                playDailySequence(newScore);
             } else {
                 setSequenceClickCount(prev => prev + 1);
                 setIsButtonsDisabled(false);
@@ -96,7 +92,7 @@ export default function DailyGame({
         } else {
             console.log(mistakesRemaining);
             // First check if we have any mistakes remaining
-            if (mistakesRemaining > 0) {
+            if (mistakesRemaining > 1) {
                 // TODO: do something here
                 decrementMistakesRemaining();
                 setCorrectAttempt(false);
@@ -104,6 +100,7 @@ export default function DailyGame({
                 setIsButtonsDisabled(false);
             } else {
                 // Game over
+                decrementMistakesRemaining();
                 setCorrectAttempt(false);
                 await flashCorrectTile();
                 onGameOver();
@@ -142,7 +139,15 @@ export default function DailyGame({
                     {isSoundOn ? '🔊' : '🔇'}
                 </button>
                 <div className="justify-self-center">Score: {score}</div>
-                {/*<div className="justify-self-end">Highscore: {highScore}</div>*/}
+                <div className="grid grid-cols-2 gap-2 justify-self-end">
+                    <div>Lives</div>
+                    <div>
+                        {Array.from({ length: DEFAULT_MISTAKES_REMAINING }).map(
+                            (_, index) =>
+                                index < mistakesRemaining ? '❤️' : '💀'
+                        )}
+                    </div>
+                </div>
             </div>
             <div
                 className={cn(

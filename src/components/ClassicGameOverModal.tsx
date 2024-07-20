@@ -5,13 +5,13 @@ interface GameOverModalProps {
     onPlayAgainClick: MouseEventHandler<HTMLButtonElement>;
 }
 
-export default function GameOverModal({
+export default function ClassicGameOverModal({
     onPlayAgainClick,
 }: GameOverModalProps) {
     const { score, highScore } = useClassicGameState();
 
     return (
-        <div className="flex w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-red-600 bg-red-200/[0.99] p-4 text-red-600 shadow">
+        <div className="flex w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-red-600 bg-red-200/[0.99] p-4 text-red-600 shadow-xl">
             <h1 className="text-3xl font-extrabold uppercase ">Game Over 😭</h1>
             <div className="text-left">
                 <h2 className="text-2xl text-red-400">SCORE: {score}</h2>

@@ -23,7 +23,7 @@ interface DailyGameContextProviderProps {
     children: ReactNode;
 }
 
-const DEFAULT_MISTAKES_REMAINING: number = 3;
+export const DEFAULT_MISTAKES_REMAINING: number = 3;
 
 /**
  * The context provider for the game state.

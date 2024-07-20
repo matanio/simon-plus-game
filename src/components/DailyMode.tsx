@@ -7,6 +7,7 @@ import { Logo } from './Logo.tsx';
 import { DailyInstructionsModal } from './InstructionsModals.tsx';
 import { DailyGameStateContextProvider } from '../contexts/DailyGameContextProvider.tsx';
 import DailyGame from './DailyGame.tsx';
+import DailyGameOverModal from './DailyGameOverModal.tsx';
 
 interface TitleScreenProps {
     onStartClick: MouseEventHandler;
@@ -39,6 +40,7 @@ export default function DailyMode() {
 
     const [showTitleScreen, setShowTitleScreen] = useState<boolean>(true);
     const [showInstructions, setShowInstructions] = useState<boolean>(false);
+    const [showGameOver, setShowGameOver] = useState<boolean>(false);
 
     function handleTitleStartClick() {
         setShowTitleScreen(false);
@@ -47,11 +49,14 @@ export default function DailyMode() {
 
     function startGame() {
         setShowTitleScreen(false);
+        setShowInstructions(false);
         setIsPlaying(true);
     }
 
     function handleGameOver() {
-        console.log('game over');
+        setShowInstructions(false);
+        setIsPlaying(false);
+        setShowGameOver(true);
     }
 
     return (
@@ -86,9 +91,7 @@ export default function DailyMode() {
                                     onStartClick={startGame}
                                 />
                             )}
-                            {/*{showGameOver && (*/}
-                            {/*    <GameOverModal onPlayAgainClick={startGame} />*/}
-                            {/*)}*/}
+                            {showGameOver && <DailyGameOverModal />}
                         </motion.div>
                     )}
                 </AnimatePresence>
