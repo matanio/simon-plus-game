@@ -10,6 +10,9 @@ interface DailyGameProps {
     onGameOver: () => void;
 }
 
+const DIVIDER = 10; // Increase for more gradual speed increase of notes being played in a sequence
+const NUMBER_OF_FLASHES_FOR_CORRECT_TILE = 3;
+
 export default function DailyGame({
     numberOfTiles,
     onGameOver,
@@ -39,8 +42,7 @@ export default function DailyGame({
     };
 
     const flashCorrectTile = async () => {
-        const NUMBER_OF_FLASHES = 3;
-        for (let i = 0; i < NUMBER_OF_FLASHES; i++) {
+        for (let i = 0; i < NUMBER_OF_FLASHES_FOR_CORRECT_TILE; i++) {
             flashTile(sequence[sequenceClickCount]);
             await sleep(250);
             resetTile(sequence[sequenceClickCount]);
@@ -65,7 +67,6 @@ export default function DailyGame({
     const playDailySequence = async (newSequenceIndex: number) => {
         setIsButtonsDisabled(true);
         for (let i = 0; i <= newSequenceIndex; i++) {
-            const DIVIDER = 10; // Increase for more gradual increase
             await sleep(delay * Math.exp(-score / DIVIDER));
             playNote(sequence[i]);
             flashTile(sequence[i]);

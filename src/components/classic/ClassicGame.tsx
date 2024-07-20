@@ -9,6 +9,9 @@ interface ClassicGameProps {
     onGameOver: () => void;
 }
 
+const DIVIDER = 10; // Increase for more gradual speed increase of notes being played in a sequence
+const NUMBER_OF_FLASHES_FOR_CORRECT_TILE = 3;
+
 export default function ClassicGame({
     numberOfTiles,
     onGameOver,
@@ -25,6 +28,9 @@ export default function ClassicGame({
         delay,
         resetTile,
         incrementScore,
+        isSoundOn,
+        toggleSound,
+        highScore,
     } = useClassicGameState();
 
     const startGameLogic = () => {
@@ -39,7 +45,6 @@ export default function ClassicGame({
         const newSequence = [...generatedSequence, randChoice];
         setGeneratedSequence(newSequence);
         for (let i = 0; i < newSequence.length; i++) {
-            const DIVIDER = 10; // Increase for more gradual increase
             await sleep(delay * Math.exp(-score / DIVIDER));
             playNote(newSequence[i]);
             flashTile(newSequence[i]);
@@ -51,8 +56,7 @@ export default function ClassicGame({
     };
 
     const flashCorrectTile = async () => {
-        const NUMBER_OF_FLASHES = 3;
-        for (let i = 0; i < NUMBER_OF_FLASHES; i++) {
+        for (let i = 0; i < NUMBER_OF_FLASHES_FOR_CORRECT_TILE; i++) {
             flashTile(generatedSequence[sequenceClickCount]);
             await sleep(250);
             resetTile(generatedSequence[sequenceClickCount]);
@@ -74,7 +78,14 @@ export default function ClassicGame({
 
     return (
         <Game
-            gameHeader={<ClassicGameHeader />}
+            gameHeader={
+                <ClassicGameHeader
+                    score={score}
+                    highScore={highScore}
+                    isSoundOn={isSoundOn}
+                    toggleSound={toggleSound}
+                />
+            }
             numberOfTiles={numberOfTiles}
             onIncorrectTileClick={handleIncorrectTileClick}
             onCorrectRound={handleCorrectRound}
@@ -90,9 +101,19 @@ export default function ClassicGame({
     );
 }
 
-export function ClassicGameHeader() {
-    const { score, highScore, isSoundOn, toggleSound } = useClassicGameState();
+interface ClassicGameHeaderProps {
+    score: number;
+    highScore: number;
+    isSoundOn: boolean;
+    toggleSound: () => void;
+}
 
+export function ClassicGameHeader({
+    score,
+    highScore,
+    isSoundOn,
+    toggleSound,
+}: ClassicGameHeaderProps) {
     return (
         <div className="grid w-full grid-cols-3 text-xl text-white">
             <button className="justify-self-start" onClick={toggleSound}>
