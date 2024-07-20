@@ -115,13 +115,10 @@ export function DailyGameHeader() {
                 {isSoundOn ? '🔊' : '🔇'}
             </button>
             <div className="justify-self-center">Score: {score}</div>
-            <div className="grid grid-cols-2 gap-2 justify-self-end">
-                <div>Lives</div>
-                <div>
-                    {Array.from({ length: DEFAULT_MISTAKES_REMAINING }).map(
-                        (_, index) => (index < mistakesRemaining ? '❤️' : '💀')
-                    )}
-                </div>
+            <div className="justify-self-end">
+                {Array.from({ length: DEFAULT_MISTAKES_REMAINING }).map(
+                    (_, index) => (index < mistakesRemaining ? '❤️' : '💀')
+                )}
             </div>
         </div>
     );
