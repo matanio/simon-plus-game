@@ -1,6 +1,6 @@
 import Container from '../Container.tsx';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useGeneralGameState } from '../../game/game.ts';
+import { getNumberOfTilesToday, useGeneralGameState } from '../../game/game.ts';
 import { MouseEventHandler, useState } from 'react';
 import { formatDateAsMonthDayYear } from '../../lib/util.ts';
 import { Logo } from '../Logo.tsx';
@@ -59,8 +59,10 @@ export default function DailyMode() {
         setShowGameOver(true);
     }
 
+    const calculateNumberOfTiles = getNumberOfTilesToday();
+
     return (
-        <DailyGameStateContextProvider>
+        <DailyGameStateContextProvider numberOfTiles={calculateNumberOfTiles}>
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -74,7 +76,7 @@ export default function DailyMode() {
                     {!showTitleScreen && (
                         <DailyGame
                             onGameOver={handleGameOver}
-                            numberOfTiles={4}
+                            numberOfTiles={calculateNumberOfTiles}
                         />
                     )}
                 </Container>

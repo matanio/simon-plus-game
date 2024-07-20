@@ -50,14 +50,22 @@ export const useGeneralGameState = () => {
     return generalContext;
 };
 
+export type AllowedTileNumbers = 4 | 6 | 8;
+
+/**
+ * Generate a sequence of numbers for the daily game.
+ * @param date
+ * @param numberOfTiles
+ * @param length
+ */
 export const generateDailyGameSequence = (
     date: Date = new Date(),
     numberOfTiles: number = 4,
-    length: number = 200 // TODO: make this a constant and deal with what happens if we get to it
+    length: number = 200
 ) => {
     const dateString = formatDateAsYearMonthDay(date);
     let seed = 0;
-    for (let i = 0; i < dateString.length; i++) {
+    for (let i = dateString.length - 1; i >= 0; i--) {
         seed += dateString.charCodeAt(i);
     }
 
@@ -73,6 +81,22 @@ export const generateDailyGameSequence = (
     }
 
     return sequence;
+};
+
+export const getNumberOfTilesToday = (date: Date = new Date()) => {
+    const dateString = formatDateAsYearMonthDay(date);
+    let seed = 0;
+    for (let i = dateString.length - 1; i >= 0; i--) {
+        seed += dateString.charCodeAt(i);
+    }
+
+    // Use the seed to generate a pseudo-random number
+    seed = (seed * 1232 + 123123) % 104332;
+    const random = seed / 233280;
+
+    if (random < 0.33) return 4;
+    if (random < 0.66) return 6;
+    return 8;
 };
 
 export type Instrument = 'synthesizer' | 'trumpet' | 'guitar';

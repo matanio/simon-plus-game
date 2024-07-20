@@ -4,7 +4,7 @@ import {
     formatDateAsYearMonthDay,
     useLocalStorage,
 } from '../lib/util.ts';
-import { generateDailyGameSequence } from '../game/game.ts';
+import { AllowedTileNumbers, generateDailyGameSequence } from '../game/game.ts';
 
 interface DailyGameStateContext {
     score: number;
@@ -21,6 +21,7 @@ export const DailyGameContext = createContext<DailyGameStateContext | null>(
 );
 
 interface DailyGameContextProviderProps {
+    numberOfTiles: AllowedTileNumbers;
     children: ReactNode;
 }
 
@@ -30,10 +31,12 @@ export const DEFAULT_MISTAKES_REMAINING: number = 3;
  * The context provider for the game state.
  *
  * @param children
+ * @param numberOfTiles
  * @constructor
  */
 export const DailyGameStateContextProvider = ({
     children,
+    numberOfTiles,
 }: DailyGameContextProviderProps) => {
     const [score, setScore] = useLocalStorage<number>('daily_score', 0);
     const [mistakesRemaining, setMistakesRemaining] = useLocalStorage<number>(
@@ -47,7 +50,7 @@ export const DailyGameStateContextProvider = ({
 
     const [sequence, setSequence] = useLocalStorage<number[]>(
         'daily_sequence',
-        generateDailyGameSequence()
+        generateDailyGameSequence(new Date(), numberOfTiles)
     );
 
     // Core game load logic
@@ -67,7 +70,7 @@ export const DailyGameStateContextProvider = ({
         resetScore();
         setMistakesRemaining(DEFAULT_MISTAKES_REMAINING);
         setLastDate(formatDateAsYearMonthDay(new Date()));
-        setSequence(generateDailyGameSequence());
+        setSequence(generateDailyGameSequence(new Date(), numberOfTiles));
     };
 
     const decrementMistakesRemaining = () => {
