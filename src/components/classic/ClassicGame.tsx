@@ -1,33 +1,32 @@
-import { cn, sleep } from '../lib/util.ts';
+import { cn, sleep } from '../../lib/util.ts';
 import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useDailyGameState } from '../game/game.ts';
-import { DEFAULT_MISTAKES_REMAINING } from '../contexts/DailyGameContextProvider.tsx';
+import { useClassicGameState } from '../../game/game.ts';
 
-interface DailyGameProps {
+interface ClassicGameProps {
     numberOfTiles: 4 | 6 | 8;
     onGameOver: () => void;
 }
 
-export default function DailyGame({
+export default function ClassicGame({
     numberOfTiles,
     onGameOver,
-}: DailyGameProps) {
+}: ClassicGameProps) {
     const {
+        highScore,
         isSoundOn,
         toggleSound,
         score,
+        resetScore,
         incrementScore,
         isPlaying,
         playNote,
         delay,
-        decrementMistakesRemaining,
-        mistakesRemaining,
-        sequence,
-    } = useDailyGameState();
+    } = useClassicGameState();
 
     // Local state
+    const [generatedSequence, setGeneratedSequence] = useState<number[]>([]);
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
     const [sequenceClickCount, setSequenceClickCount] = useState(0);
     const [activeTile, setActiveTile] = useState<number | null>(null);
@@ -37,12 +36,12 @@ export default function DailyGame({
     // Start Game Logic
     const startGame = () => {
         Tone.start();
-        playDailySequence(score);
+        resetScore();
+        playSequence();
     };
 
     useEffect(() => {
         const startGameLogic = async () => {
-            if (mistakesRemaining === 0) onGameOver();
             if (isPlaying) {
                 await sleep(250); // Sleep to wait for modal animations to finish
                 startGame();
@@ -52,18 +51,19 @@ export default function DailyGame({
         startGameLogic();
     }, [isPlaying]);
 
-    const playDailySequence = async (newSequenceIndex: number) => {
+    const playSequence = async () => {
         setIsButtonsDisabled(true);
-        console.log(`SCORE: ${score}`);
-        console.log(`SEQUENCE: ${sequence}`);
-        for (let i = 0; i <= newSequenceIndex; i++) {
-            console.log(`CURR: ${sequence[i]}`);
+        const randChoice = Math.floor(Math.random() * numberOfTiles) + 1;
+        const newSequence = [...generatedSequence, randChoice];
+        setGeneratedSequence(newSequence);
+        for (let i = 0; i < newSequence.length; i++) {
             // TODO: move to state?
-            await sleep(delay);
-            playNote(sequence[i]);
-            flashTile(sequence[i]);
-            await sleep(delay);
-            resetTile(sequence[i]);
+            const DIVIDER = 10; // Increase for more gradual increase
+            await sleep(delay * Math.exp(-score / DIVIDER));
+            playNote(newSequence[i]);
+            flashTile(newSequence[i]);
+            await sleep(delay * Math.exp(-score / DIVIDER));
+            resetTile(newSequence[i]);
         }
         setIsButtonsDisabled(false);
         setSequenceClickCount(0);
@@ -73,37 +73,26 @@ export default function DailyGame({
         if (isButtonsDisabled) return;
         setIsButtonsDisabled(true);
         playNote(tile);
-        const isCorrectTile = tile === sequence[sequenceClickCount];
+        const isCorrectTile = tile === generatedSequence[sequenceClickCount];
         if (isCorrectTile) {
-            const isLastTile = sequenceClickCount === score;
+            const isLastTile =
+                sequenceClickCount === generatedSequence.length - 1;
             if (isLastTile) {
                 // do it again
                 setCorrectAttempt(true);
                 await sleep(600);
-                const newScore = score + 1;
                 incrementScore();
                 setCorrectAttempt(false);
-                playDailySequence(newScore);
+                playSequence();
             } else {
                 setSequenceClickCount(prev => prev + 1);
                 setIsButtonsDisabled(false);
             }
         } else {
-            console.log(mistakesRemaining);
-            // First check if we have any mistakes remaining
-            if (mistakesRemaining > 1) {
-                // TODO: do something here
-                decrementMistakesRemaining();
-                setCorrectAttempt(false);
-                await flashCorrectTile();
-                setIsButtonsDisabled(false);
-            } else {
-                // Game over
-                decrementMistakesRemaining();
-                setCorrectAttempt(false);
-                await flashCorrectTile();
-                onGameOver();
-            }
+            setGeneratedSequence([]);
+            setIsButtonsDisabled(true);
+            await flashCorrectTile();
+            onGameOver();
         }
     };
 
@@ -124,9 +113,9 @@ export default function DailyGame({
     const flashCorrectTile = async () => {
         const NUMBER_OF_FLASHES = 3;
         for (let i = 0; i < NUMBER_OF_FLASHES; i++) {
-            flashTile(sequence[sequenceClickCount]);
+            flashTile(generatedSequence[sequenceClickCount]);
             await sleep(250);
-            resetTile(sequence[sequenceClickCount]);
+            resetTile(generatedSequence[sequenceClickCount]);
             await sleep(250);
         }
     };
@@ -138,15 +127,7 @@ export default function DailyGame({
                     {isSoundOn ? '🔊' : '🔇'}
                 </button>
                 <div className="justify-self-center">Score: {score}</div>
-                <div className="grid grid-cols-2 gap-2 justify-self-end">
-                    <div>Lives</div>
-                    <div>
-                        {Array.from({ length: DEFAULT_MISTAKES_REMAINING }).map(
-                            (_, index) =>
-                                index < mistakesRemaining ? '❤️' : '💀'
-                        )}
-                    </div>
-                </div>
+                <div className="justify-self-end">Highscore: {highScore}</div>
             </div>
             <div
                 className={cn(

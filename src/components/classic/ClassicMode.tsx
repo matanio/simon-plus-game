@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import ClassicGame from './ClassicGame.tsx';
 import { useState } from 'react';
-import Container from './Container.tsx';
+import Container from '../Container.tsx';
 import ClassicGameOverModal from './ClassicGameOverModal.tsx';
-import { ClassicGameStateContextProvider } from '../contexts/ClassicGameContextProvider.tsx';
-import { useGeneralGameState } from '../game/game.ts';
-import { ClassicInstructionsModal } from './InstructionsModals.tsx';
+import { ClassicGameStateContextProvider } from '../../contexts/ClassicGameContextProvider.tsx';
+import { useGeneralGameState } from '../../game/game.ts';
+import { ClassicInstructionsModal } from '../InstructionsModals.tsx';
 
 export default function ClassicMode() {
     const [showInstructions, setShowInstructions] = useState<boolean>(true);
@@ -34,11 +34,9 @@ export default function ClassicMode() {
                 className="relative grid size-full px-4 pb-12 pt-4"
             >
                 <Container>
-                    {/* ClassicGame starts when isPlaying is true */}
                     <ClassicGame
                         onGameOver={handleGameOver}
                         numberOfTiles={4}
-                        mode="classic"
                     />
                 </Container>
                 <AnimatePresence>

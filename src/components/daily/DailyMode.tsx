@@ -1,11 +1,11 @@
-import Container from './Container.tsx';
+import Container from '../Container.tsx';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useGeneralGameState } from '../game/game.ts';
+import { useGeneralGameState } from '../../game/game.ts';
 import { MouseEventHandler, useState } from 'react';
-import { formatDateAsMonthDayYear } from '../lib/util.ts';
-import { Logo } from './Logo.tsx';
-import { DailyInstructionsModal } from './InstructionsModals.tsx';
-import { DailyGameStateContextProvider } from '../contexts/DailyGameContextProvider.tsx';
+import { formatDateAsMonthDayYear } from '../../lib/util.ts';
+import { Logo } from '../Logo.tsx';
+import { DailyInstructionsModal } from '../InstructionsModals.tsx';
+import { DailyGameStateContextProvider } from '../../contexts/DailyGameContextProvider.tsx';
 import DailyGame from './DailyGame.tsx';
 import DailyGameOverModal from './DailyGameOverModal.tsx';
 

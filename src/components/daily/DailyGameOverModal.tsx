@@ -1,6 +1,6 @@
-import { useDailyGameState } from '../game/game.ts';
+import { useDailyGameState } from '../../game/game.ts';
 import { useState } from 'react';
-import CountdownTimer from './CountdownTimer.tsx';
+import CountdownTimer from '../CountdownTimer.tsx';
 
 export default function DailyGameOverModal() {
     const { score, getFormattedResults } = useDailyGameState();

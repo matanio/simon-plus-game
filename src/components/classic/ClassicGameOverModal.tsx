@@ -1,5 +1,5 @@
 import { MouseEventHandler } from 'react';
-import { useClassicGameState } from '../game/game.ts';
+import { useClassicGameState } from '../../game/game.ts';
 
 interface GameOverModalProps {
     onPlayAgainClick: MouseEventHandler<HTMLButtonElement>;

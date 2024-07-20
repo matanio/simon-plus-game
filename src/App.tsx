@@ -1,10 +1,10 @@
 import Footer from './components/Footer.tsx';
 import StartScreen from './components/StartScreen.tsx';
 import Header from './components/Header.tsx';
-import ClassicMode from './components/ClassicMode.tsx';
+import ClassicMode from './components/classic/ClassicMode.tsx';
 import { AnimatePresence } from 'framer-motion';
 import { useGeneralGameState } from './game/game.ts';
-import DailyMode from './components/DailyMode.tsx';
+import DailyMode from './components/daily/DailyMode.tsx';
 
 const App = () => {
     const { mode, setModeToClassic, setModeToDaily } = useGeneralGameState();
