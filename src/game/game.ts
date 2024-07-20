@@ -122,7 +122,7 @@ export const guitar = new Tone.Sampler({
         C4: 'twang_c5_f_rr1.wav',
     },
     release: 1,
-    baseUrl: '/samples/guitar/',
+    baseUrl: '/simon-plus-game/samples/guitar/',
     onload: () => {
         console.log('Guitar samples loaded!');
     },
@@ -142,7 +142,7 @@ export const trumpet = new Tone.Sampler({
         C4: 'Sum_SHTrumpet_sus_C5_v1_rr1.wav',
     },
     release: 1,
-    baseUrl: '/samples/trumpet/',
+    baseUrl: '/simon-plus-game/samples/trumpet/',
     onload: () => {
         console.log('Trumpet samples loaded!');
     },
