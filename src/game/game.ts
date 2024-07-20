@@ -99,7 +99,7 @@ export const getNumberOfTilesToday = (date: Date = new Date()) => {
 
     // Use the seed to generate a pseudo-random number
     seed = (seed * 1232 + 123123) % 104332;
-    const random = seed / 233280;
+    const random = seed / 104332;
 
     if (random < 0.33) return 4;
     if (random < 0.66) return 6;
