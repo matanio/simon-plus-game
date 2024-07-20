@@ -33,7 +33,7 @@ export default function DailyGame({
     } = useDailyGameState();
 
     const startGameLogic = () => {
-        if (mistakesRemaining === 0) {
+        if (mistakesRemaining === 0 || score === sequence.length) {
             onGameOver();
             return;
         }
@@ -78,6 +78,12 @@ export default function DailyGame({
     };
 
     const handleCorrectRound = () => {
+        // If we somehow reach the end of the daily sequence, just end the game
+        if (score === sequence.length - 1) {
+            incrementScore();
+            onGameOver();
+            return;
+        }
         incrementScore();
         playDailySequence(score + 1);
     };

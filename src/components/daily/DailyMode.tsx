@@ -72,7 +72,6 @@ export default function DailyMode() {
                         <TitleScreen onStartClick={handleTitleStartClick} />
                     )}
                     {!showTitleScreen && (
-                        // ClassicGame starts when isPlaying is true
                         <DailyGame
                             onGameOver={handleGameOver}
                             numberOfTiles={4}
