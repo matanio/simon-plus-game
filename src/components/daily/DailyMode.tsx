@@ -6,8 +6,8 @@ import { formatDateAsMonthDayYear } from '../../lib/util.ts';
 import { Logo } from '../Logo.tsx';
 import { DailyInstructionsModal } from '../InstructionsModals.tsx';
 import { DailyGameStateContextProvider } from '../../contexts/DailyGameContextProvider.tsx';
-import DailyGame from './DailyGame.tsx';
 import DailyGameOverModal from './DailyGameOverModal.tsx';
+import DailyGame from './DailyGame.tsx';
 
 interface TitleScreenProps {
     onStartClick: MouseEventHandler;

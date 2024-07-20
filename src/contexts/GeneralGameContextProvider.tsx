@@ -24,6 +24,11 @@ interface GeneralGameContext {
     speed: Speed;
     setSpeed: (speed: Speed) => void;
     delay: number;
+    tileColors: string[];
+    flashColors: string[];
+    activeTile: number | null;
+    flashTile: (tile: number) => void;
+    resetTile: (tile: number) => void;
 }
 
 export const GeneralGameContext = createContext<GeneralGameContext | null>(
@@ -48,6 +53,45 @@ export const GeneralGameStateContextProvider = ({
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [instrument, setInstrument] = useState<Instrument>('synthesizer');
     const [speed, setSpeed] = useState<Speed>('Normal');
+
+    const colors = [
+        'bg-green-500/75',
+        'bg-red-600/75',
+        'bg-yellow-400/75',
+        'bg-blue-700/75',
+        'bg-purple-700/75',
+        'bg-orange-600/75',
+        'bg-gray-400/75',
+        'bg-pink-900/75',
+    ];
+
+    const flashColors = [
+        'bg-green-300',
+        'bg-red-300',
+        'bg-yellow-100',
+        'bg-blue-400',
+        'bg-purple-400',
+        'bg-orange-300',
+        'bg-gray-100',
+        'bg-pink-600',
+    ];
+
+    const [tileColors, setTileColors] = useState<string[]>(colors);
+    const [activeTile, setActiveTile] = useState<number | null>(null);
+
+    const flashTile = (tile: number) => {
+        const newTileColors = [...tileColors];
+        newTileColors[tile - 1] = flashColors[tile - 1];
+        setTileColors(newTileColors);
+        setActiveTile(tile); // Set the active tile
+    };
+
+    const resetTile = (tile: number) => {
+        const newTileColors = [...tileColors];
+        newTileColors[tile - 1] = colors[tile - 1];
+        setTileColors(newTileColors);
+        setActiveTile(null); // Reset the active tile
+    };
 
     // TODO: update type
     const [destination, setDestination] = useState<any>(synth.toDestination());
@@ -127,6 +171,11 @@ export const GeneralGameStateContextProvider = ({
                 speed,
                 setSpeed,
                 delay,
+                tileColors,
+                flashColors,
+                activeTile,
+                flashTile,
+                resetTile,
             }}
         >
             {children}
