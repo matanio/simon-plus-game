@@ -3,6 +3,7 @@ import { ClassicGameContext } from '../contexts/ClassicGameContextProvider.tsx';
 import { GeneralGameContext } from '../contexts/GeneralGameContextProvider.tsx';
 import * as Tone from 'tone';
 import { DailyGameContext } from '../contexts/DailyGameContextProvider.tsx';
+import { formatDateAsYearMonthDay } from '../lib/util.ts';
 
 export type Mode = 'classic' | 'daily';
 
@@ -68,10 +69,26 @@ export const useGameState = (mode: Mode) => {
 export const generateDailyGameSequence = (
     date: Date = new Date(),
     numberOfTiles: number = 4,
-    maximumLength: number = 20 // TODO: update
+    length: number = 200 // TODO: make this a constant and deal with what happens if we get to it
 ) => {
-    // TODO: implement
-    return [1, 2, 1, 3, 4, 2, 3, 1, 1, 3, 1, 1, 3, 2, 4, 3, 4, 2, 3, 3];
+    const dateString = formatDateAsYearMonthDay(date);
+    let seed = 0;
+    for (let i = 0; i < dateString.length; i++) {
+        seed += dateString.charCodeAt(i);
+    }
+
+    const sequence = [];
+    for (let i = 0; i < length; i++) {
+        // Use the seed to generate a pseudo-random number
+        seed = (seed * 9301 + 49297) % 233280;
+        const random = seed / 233280;
+
+        // Generate a number between 1 and numberOfTiles
+        const number = Math.floor(random * numberOfTiles) + 1;
+        sequence.push(number);
+    }
+
+    return sequence;
 };
 
 export type Instrument = 'synthesizer' | 'trumpet' | 'guitar';
