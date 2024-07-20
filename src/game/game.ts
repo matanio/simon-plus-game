@@ -39,6 +39,9 @@ export const useDailyGameState = () => {
     return { ...generalContext, ...dailyContext };
 };
 
+/**
+ * Custom hook to access the general game state (i.e. state that is the same between classic and daily modes).
+ */
 export const useGeneralGameState = () => {
     const generalContext = useContext(GeneralGameContext);
 
@@ -83,6 +86,10 @@ export const generateDailyGameSequence = (
     return sequence;
 };
 
+/**
+ * Get the number of tiles for the daily game today.
+ * @param date
+ */
 export const getNumberOfTilesToday = (date: Date = new Date()) => {
     const dateString = formatDateAsYearMonthDay(date);
     let seed = 0;
@@ -105,7 +112,7 @@ export const NOTES = ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'];
 export const synth = new Tone.Synth();
 export const guitar = new Tone.Sampler({
     urls: {
-        C3: 'twang_c4_f_rr1.wav', // Purposeful C3 to C4 mapping for ease of use
+        C3: 'twang_c4_f_rr1.wav', // Purposeful incorrect mapping for ease of use
         D3: 'twang_d4_f_rr1.wav',
         E3: 'twang_e4_f_rr1.wav',
         F3: 'twang_f4_f_rr1.wav',

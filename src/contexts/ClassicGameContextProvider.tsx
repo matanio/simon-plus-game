@@ -17,7 +17,7 @@ interface ClassicGameContextProviderProps {
 }
 
 /**
- * The context provider for the game state.
+ * The context provider for the classic game state.
  *
  * @param children
  * @constructor

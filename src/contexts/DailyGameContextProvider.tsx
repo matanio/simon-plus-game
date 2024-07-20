@@ -28,7 +28,7 @@ interface DailyGameContextProviderProps {
 export const DEFAULT_MISTAKES_REMAINING: number = 3;
 
 /**
- * The context provider for the game state.
+ * The context provider for the daily game state.
  *
  * @param children
  * @param numberOfTiles

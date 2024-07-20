@@ -8,6 +8,7 @@ import {
     synth,
     trumpet,
 } from '../game/game.ts';
+import { Sampler, Synth } from 'tone';
 
 interface GeneralGameContext {
     isSoundOn: boolean;
@@ -40,7 +41,7 @@ interface GeneralGameStateContextProps {
 }
 
 /**
- * The context provider for the game state.
+ * The context provider for the general game state.
  *
  * @param children
  * @constructor
@@ -93,8 +94,9 @@ export const GeneralGameStateContextProvider = ({
         setActiveTile(null); // Reset the active tile
     };
 
-    // TODO: update type
-    const [destination, setDestination] = useState<any>(synth.toDestination());
+    const [destination, setDestination] = useState<Synth | Sampler>(
+        synth.toDestination()
+    );
 
     const [delay, setDelay] = useState<number>(500);
 
