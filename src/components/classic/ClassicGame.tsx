@@ -2,7 +2,13 @@ import { cn, sleep } from '../../lib/util.ts';
 import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useClassicGameState } from '../../game/game.ts';
+import {
+    buildTiles,
+    colors,
+    flashColors,
+    useClassicGameState,
+    useTile,
+} from '../../game/game.ts';
 
 interface ClassicGameProps {
     numberOfTiles: 4 | 6 | 8;
@@ -29,9 +35,12 @@ export default function ClassicGame({
     const [generatedSequence, setGeneratedSequence] = useState<number[]>([]);
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
     const [sequenceClickCount, setSequenceClickCount] = useState(0);
-    const [activeTile, setActiveTile] = useState<number | null>(null);
     const [correctAttempt, setCorrectAttempt] = useState(false);
-    const [tileColors, setTileColors] = useState<string[]>(colors);
+
+    const { tileColors, activeTile, flashTile, resetTile } = useTile(
+        colors,
+        flashColors
+    );
 
     // Start Game Logic
     const startGame = () => {
@@ -47,7 +56,6 @@ export default function ClassicGame({
                 startGame();
             }
         };
-
         startGameLogic();
     }, [isPlaying]);
 
@@ -57,7 +65,6 @@ export default function ClassicGame({
         const newSequence = [...generatedSequence, randChoice];
         setGeneratedSequence(newSequence);
         for (let i = 0; i < newSequence.length; i++) {
-            // TODO: move to state?
             const DIVIDER = 10; // Increase for more gradual increase
             await sleep(delay * Math.exp(-score / DIVIDER));
             playNote(newSequence[i]);
@@ -94,20 +101,6 @@ export default function ClassicGame({
             await flashCorrectTile();
             onGameOver();
         }
-    };
-
-    const flashTile = (tile: number) => {
-        const newTileColors = [...tileColors];
-        newTileColors[tile - 1] = flashColors[tile - 1];
-        setTileColors(newTileColors);
-        setActiveTile(tile); // Set the active tile
-    };
-
-    const resetTile = (tile: number) => {
-        const newTileColors = [...tileColors];
-        newTileColors[tile - 1] = colors[tile - 1];
-        setTileColors(newTileColors);
-        setActiveTile(null); // Reset the active tile
     };
 
     const flashCorrectTile = async () => {
@@ -168,29 +161,3 @@ export default function ClassicGame({
         </div>
     );
 }
-
-const colors = [
-    'bg-green-500/75',
-    'bg-red-600/75',
-    'bg-yellow-400/75',
-    'bg-blue-700/75',
-    'bg-purple-700/75',
-    'bg-orange-600/75',
-    'bg-gray-400/75',
-    'bg-pink-900/75',
-];
-
-const flashColors = [
-    'bg-green-300',
-    'bg-red-300',
-    'bg-yellow-100',
-    'bg-blue-400',
-    'bg-purple-400',
-    'bg-orange-300',
-    'bg-gray-100',
-    'bg-pink-600',
-];
-
-const buildTiles = (numberOfTiles: number) => {
-    return Array.from({ length: numberOfTiles }, (_, index) => index + 1);
-};

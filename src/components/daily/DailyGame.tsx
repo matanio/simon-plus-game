@@ -2,7 +2,13 @@ import { cn, sleep } from '../../lib/util.ts';
 import { useEffect, useState } from 'react';
 import * as Tone from 'tone';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useDailyGameState } from '../../game/game.ts';
+import {
+    buildTiles,
+    colors,
+    flashColors,
+    useDailyGameState,
+    useTile,
+} from '../../game/game.ts';
 import { DEFAULT_MISTAKES_REMAINING } from '../../contexts/DailyGameContextProvider.tsx';
 
 interface DailyGameProps {
@@ -30,9 +36,12 @@ export default function DailyGame({
     // Local state
     const [isButtonsDisabled, setIsButtonsDisabled] = useState(true);
     const [sequenceClickCount, setSequenceClickCount] = useState(0);
-    const [activeTile, setActiveTile] = useState<number | null>(null);
     const [correctAttempt, setCorrectAttempt] = useState(false);
-    const [tileColors, setTileColors] = useState<string[]>(colors);
+
+    const { tileColors, activeTile, flashTile, resetTile } = useTile(
+        colors,
+        flashColors
+    );
 
     // Start Game Logic
     const startGame = () => {
@@ -54,15 +63,12 @@ export default function DailyGame({
 
     const playDailySequence = async (newSequenceIndex: number) => {
         setIsButtonsDisabled(true);
-        console.log(`SCORE: ${score}`);
-        console.log(`SEQUENCE: ${sequence}`);
         for (let i = 0; i <= newSequenceIndex; i++) {
-            console.log(`CURR: ${sequence[i]}`);
-            // TODO: move to state?
-            await sleep(delay);
+            const DIVIDER = 10; // Increase for more gradual increase
+            await sleep(delay * Math.exp(-score / DIVIDER));
             playNote(sequence[i]);
             flashTile(sequence[i]);
-            await sleep(delay);
+            await sleep(delay * Math.exp(-score / DIVIDER));
             resetTile(sequence[i]);
         }
         setIsButtonsDisabled(false);
@@ -89,36 +95,20 @@ export default function DailyGame({
                 setIsButtonsDisabled(false);
             }
         } else {
-            console.log(mistakesRemaining);
-            // First check if we have any mistakes remaining
             if (mistakesRemaining > 1) {
-                // TODO: do something here
+                // If we have mistakes left, just flash the correct tile and continue
                 decrementMistakesRemaining();
                 setCorrectAttempt(false);
                 await flashCorrectTile();
                 setIsButtonsDisabled(false);
             } else {
-                // Game over
+                // Otherwise, game over
                 decrementMistakesRemaining();
                 setCorrectAttempt(false);
                 await flashCorrectTile();
                 onGameOver();
             }
         }
-    };
-
-    const flashTile = (tile: number) => {
-        const newTileColors = [...tileColors];
-        newTileColors[tile - 1] = flashColors[tile - 1];
-        setTileColors(newTileColors);
-        setActiveTile(tile); // Set the active tile
-    };
-
-    const resetTile = (tile: number) => {
-        const newTileColors = [...tileColors];
-        newTileColors[tile - 1] = colors[tile - 1];
-        setTileColors(newTileColors);
-        setActiveTile(null); // Reset the active tile
     };
 
     const flashCorrectTile = async () => {
@@ -187,29 +177,3 @@ export default function DailyGame({
         </div>
     );
 }
-
-const colors = [
-    'bg-green-500/75',
-    'bg-red-600/75',
-    'bg-yellow-400/75',
-    'bg-blue-700/75',
-    'bg-purple-700/75',
-    'bg-orange-600/75',
-    'bg-gray-400/75',
-    'bg-pink-900/75',
-];
-
-const flashColors = [
-    'bg-green-300',
-    'bg-red-300',
-    'bg-yellow-100',
-    'bg-blue-400',
-    'bg-purple-400',
-    'bg-orange-300',
-    'bg-gray-100',
-    'bg-pink-600',
-];
-
-const buildTiles = (numberOfTiles: number) => {
-    return Array.from({ length: numberOfTiles }, (_, index) => index + 1);
-};

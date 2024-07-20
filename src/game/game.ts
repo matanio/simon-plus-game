@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ClassicGameContext } from '../contexts/ClassicGameContextProvider.tsx';
 import { GeneralGameContext } from '../contexts/GeneralGameContextProvider.tsx';
 import * as Tone from 'tone';
@@ -50,21 +50,52 @@ export const useGeneralGameState = () => {
     return generalContext;
 };
 
-/**
- * Used exclusively for the ClassicGame component to manage which game state to use.
- *
- * @param mode
- */
-export const useGameState = (mode: Mode) => {
-    switch (mode) {
-        case 'classic':
-            return useClassicGameState();
-        case 'daily':
-            return useDailyGameState();
-        default:
-            throw new Error('Invalid mode');
-    }
+export const useTile = (colors: string[], flashColors: string[]) => {
+    const [tileColors, setTileColors] = useState<string[]>(colors);
+    const [activeTile, setActiveTile] = useState<number | null>(null);
+
+    const flashTile = (tile: number) => {
+        const newTileColors = [...tileColors];
+        newTileColors[tile - 1] = flashColors[tile - 1];
+        setTileColors(newTileColors);
+        setActiveTile(tile); // Set the active tile
+    };
+
+    const resetTile = (tile: number) => {
+        const newTileColors = [...tileColors];
+        newTileColors[tile - 1] = colors[tile - 1];
+        setTileColors(newTileColors);
+        setActiveTile(null); // Reset the active tile
+    };
+
+    return { tileColors, activeTile, flashTile, resetTile };
 };
+
+export const buildTiles = (numberOfTiles: number) => {
+    return Array.from({ length: numberOfTiles }, (_, index) => index + 1);
+};
+
+export const colors = [
+    'bg-green-500/75',
+    'bg-red-600/75',
+    'bg-yellow-400/75',
+    'bg-blue-700/75',
+    'bg-purple-700/75',
+    'bg-orange-600/75',
+    'bg-gray-400/75',
+    'bg-pink-900/75',
+];
+
+export const flashColors = [
+    'bg-green-300',
+    'bg-red-300',
+    'bg-yellow-100',
+    'bg-blue-400',
+    'bg-purple-400',
+    'bg-orange-300',
+    'bg-gray-100',
+    'bg-pink-600',
+];
 
 export const generateDailyGameSequence = (
     date: Date = new Date(),
